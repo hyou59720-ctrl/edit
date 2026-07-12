@@ -8,8 +8,6 @@ import {
   staticFile,
   interpolate,
   Easing,
-  delayRender,
-  continueRender,
 } from "remotion";
 import {
   Lightbulb,
@@ -27,45 +25,7 @@ import { Broll1 } from "./Broll1";
 import { Broll2 } from "./Broll2";
 import { Broll3 } from "./Broll3";
 import { Broll4 } from "./Broll4";
-
-/* ------------------------------------------------------------------ */
-/* CUSTOM LOCAL FONTS REGISTRATION (የአንተን የፎንት ፋይሎች መጫኛ)          */
-/* ------------------------------------------------------------------ */
-
-const waitForFont = delayRender("Loading custom fonts");
-
-const fontTimeout = setTimeout(() => {
-  console.warn("Font loading timed out, continuing render anyway");
-  continueRender(waitForFont);
-}, 8000);
-
-if (typeof window !== "undefined" && "FontFace" in window) {
-  const habeshaFont = new FontFace(
-    "HabeshaStencil",
-    `url(${staticFile("/font/Waldba_Yebse_Regular_299c8ff034.ttf")})`
-  );
-
-  const akiraFont = new FontFace(
-    "AkiraExpanded",
-    `url(${staticFile("/font/Akira Expanded Demo.otf")})`
-  );
-
-  Promise.all([habeshaFont.load(), akiraFont.load()])
-    .then(([loadedHabesha, loadedAkira]) => {
-      document.fonts.add(loadedHabesha);
-      document.fonts.add(loadedAkira);
-      clearTimeout(fontTimeout);
-      continueRender(waitForFont);
-    })
-    .catch((err) => {
-      console.error("Font መጫን አልተቻለም:", err);
-      clearTimeout(fontTimeout);
-      continueRender(waitForFont);
-    });
-} else {
-  clearTimeout(fontTimeout);
-  continueRender(waitForFont);
-}
+import "./Fonts.css";
 
 /* ------------------------------------------------------------------ */
 /* KEYWORD DESIGN SYSTEM (Premium 2 to 4 Gradient Colors for TikTok)  */
