@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
 
       - name: Install System Dependencies and Amharic Fonts
         run: |
@@ -26,10 +25,12 @@ jobs:
           sudo apt-get install -y ffmpeg chromium-browser fonts-noto-core
 
       - name: Install Project Dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Render Video
-        run: npm run build
+        run: npm run build -- --gl=angle --headless --no-sandbox --disable-web-security
+        env:
+          REMOTION_CHROME_EXECUTABLE_PATH: /usr/bin/chromium-browser
 
       - name: Upload Rendered Video Artifact
         uses: actions/upload-artifact@v4
