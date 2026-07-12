@@ -23,7 +23,7 @@ jobs:
       - name: Install System Dependencies and Amharic Fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg chromium-browser fonts-abyssinica
+          sudo apt-get install -y ffmpeg chromium-browser fonts-noto-core
 
       - name: Install Project Dependencies
         run: npm install
