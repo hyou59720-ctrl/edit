@@ -25,7 +25,7 @@ import { Broll1 } from "./Broll1";
 import { Broll2 } from "./Broll2";
 import { Broll3 } from "./Broll3";
 import { Broll4 } from "./Broll4";
-import "./Fonts.css";
+import { FontStyles } from "./Fonts";
 
 /* ------------------------------------------------------------------ */
 /* KEYWORD DESIGN SYSTEM (Premium 2 to 4 Gradient Colors for TikTok)  */
@@ -417,6 +417,7 @@ export const MainVideo: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ backgroundColor: "black" }}>
+      <FontStyles />
       <CameraLayer />
       <BackgroundGraphics />
 
