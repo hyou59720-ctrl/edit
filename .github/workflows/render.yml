@@ -20,10 +20,10 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - name: Install System Dependencies
+      - name: Install System Dependencies and Amharic Fonts
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg chromium-browser
+          sudo apt-get install -y ffmpeg chromium-browser fonts-abyssinica
 
       - name: Install Project Dependencies
         run: npm install
