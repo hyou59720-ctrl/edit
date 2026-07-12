@@ -32,7 +32,12 @@ import { Broll4 } from "./Broll4";
 /* CUSTOM LOCAL FONTS REGISTRATION (የአንተን የፎንት ፋይሎች መጫኛ)          */
 /* ------------------------------------------------------------------ */
 
-const waitForFont = delayRender();
+const waitForFont = delayRender("Loading custom fonts");
+
+const fontTimeout = setTimeout(() => {
+  console.warn("Font loading timed out, continuing render anyway");
+  continueRender(waitForFont);
+}, 8000);
 
 if (typeof window !== "undefined" && "FontFace" in window) {
   const habeshaFont = new FontFace(
@@ -49,12 +54,17 @@ if (typeof window !== "undefined" && "FontFace" in window) {
     .then(([loadedHabesha, loadedAkira]) => {
       document.fonts.add(loadedHabesha);
       document.fonts.add(loadedAkira);
+      clearTimeout(fontTimeout);
       continueRender(waitForFont);
     })
     .catch((err) => {
       console.error("Font መጫን አልተቻለም:", err);
+      clearTimeout(fontTimeout);
       continueRender(waitForFont);
     });
+} else {
+  clearTimeout(fontTimeout);
+  continueRender(waitForFont);
 }
 
 /* ------------------------------------------------------------------ */
