@@ -39,16 +39,16 @@ export const Broll3: React.FC = () => {
       {/* ---------------- 🎵 SOUND EFFECTS SEQUENCE ---------------- */}
       
       {/* 1. መክፈቻ — ቦርዱ ፍሬም 0 ላይ ሲገባ የሚሰማ የሽውታ ድምፅ */}
-      <Audio src={staticFile("audio/whoosh.mp3")} volume={0.5} />
+      <Audio src={staticFile("audio/whoosh.mp3")} volume={0.6} />
 
       {/* 2. ቴምፕሌቶች — በግራ በኩል ያሉት ሳጥኖች በየተራ ሲወጡ (Frame 12 እና 20) */}
-      {frame === 12 && <Audio src={staticFile("audio/pop.mp3")} volume={0.35} />}
-      {frame === 20 && <Audio src={staticFile("audio/pop.mp3")} volume={0.35} />}
+      {frame === 12 && <Audio src={staticFile("audio/pop.mp3")} volume={0.6} />}
+      {frame === 20 && <Audio src={staticFile("audio/pop.mp3")} volume={0.6} />}
 
       {/* 3. ቼክሊስት — በቀኝ ያሉት መስመሮች በየተራ Check ሲደረጉ (Frame 15, 30, እና 45) */}
-      {frame === 15 && <Audio src={staticFile("audio/click.mp3")} volume={0.4} />}
-      {frame === 30 && <Audio src={staticFile("audio/click.mp3")} volume={0.4} />}
-      {frame === 45 && <Audio src={staticFile("audio/click.mp3")} volume={0.4} />}
+      {frame === 15 && <Audio src={staticFile("audio/click.mp3")} volume={0.7} />}
+      {frame === 30 && <Audio src={staticFile("audio/click.mp3")} volume={0.7} />}
+      {frame === 45 && <Audio src={staticFile("audio/click.mp3")} volume={0.7} />}
 
       {/* ----------------------------------------------------------- */}
 

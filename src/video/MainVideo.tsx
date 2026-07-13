@@ -299,7 +299,7 @@ export const MainVideo: React.FC = () => {
   const getSfxForFrame = (f: number): { src: string; volume: number } | null => {
     // 1. Scene Intro at Frame 0
     if (f === 0) {
-      return { src: staticFile("audio/whoosh.mp3"), volume: 0.5 };
+      return { src: staticFile("audio/whoosh.mp3"), volume: 0.6 };
     }
 
     // 2. Cut Points with stagger to avoid overlap if necessary
@@ -310,7 +310,7 @@ export const MainVideo: React.FC = () => {
           i % 2 === 0
             ? staticFile("audio/whoosh.mp3")
             : staticFile("audio/pop.mp3");
-        return { src, volume: 0.35 };
+        return { src, volume: 0.6 };
       }
     }
 
@@ -323,13 +323,13 @@ export const MainVideo: React.FC = () => {
         for (let i = 0; i < words.length; i++) {
           const wordStart = currentSubtitle.startFrame + i * staggerFrames;
           if (f === wordStart) {
-            return { src: staticFile("audio/click.mp3"), volume: 0.25 };
+            return { src: staticFile("audio/click.mp3"), volume: 0.7 };
           }
         }
       } else {
         // Amharic chunks often enter as a whole, play one sound
         if (f === currentSubtitle.startFrame) {
-            return { src: staticFile("audio/click.mp3"), volume: 0.3 };
+            return { src: staticFile("audio/click.mp3"), volume: 0.7 };
         }
       }
     }

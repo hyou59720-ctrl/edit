@@ -70,19 +70,19 @@ export const Broll2: React.FC = () => {
       
       {/* ---------------- 🎵 SOUND EFFECTS ---------------- */}
       {/* የመጀመሪያው ስክሪን ሲገባ የሚሰማ የሽውታ ድምፅ */}
-      {frame === 0 && <Audio src={staticFile("audio/whoosh.mp3")} volume={0.4} />}
+      {frame === 0 && <Audio src={staticFile("audio/whoosh.mp3")} volume={0.6} />}
       
       {/* ኤዲቲንግ ኢንተርፌስ ሙሉ በሙሉ ታይቶ ሲያበቃ (Frame 10) */}
-      {frame === 10 && <Audio src={staticFile("audio/pop.mp3")} volume={0.3} />}
+      {frame === 10 && <Audio src={staticFile("audio/pop.mp3")} volume={0.6} />}
       
       {/* የኤጀንሲው ዴሽቦርድ ወደ ላይ ከፍ እያለ ሲመጣ (Frame 45) */}
-      {frame === 45 && <Audio src={staticFile("audio/whoosh.mp3")} volume={0.4} />}
+      {frame === 45 && <Audio src={staticFile("audio/whoosh.mp3")} volume={0.6} />}
       
       {/* የግራፍ አሞሌዎች (Bars) በየተራ ብቅ ሲሉ እና የብር ቁጥሩ መቆጠር ሲጀምር */}
-      {frame === 48 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
-      {frame === 53 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
-      {frame === 58 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
-      {frame === 63 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
+      {frame === 48 && <Audio src={staticFile("audio/click.mp3")} volume={0.7} />}
+      {frame === 53 && <Audio src={staticFile("audio/click.mp3")} volume={0.7} />}
+      {frame === 58 && <Audio src={staticFile("audio/click.mp3")} volume={0.7} />}
+      {frame === 63 && <Audio src={staticFile("audio/click.mp3")} volume={0.7} />}
       {/* -------------------------------------------------- */}
 
       <div

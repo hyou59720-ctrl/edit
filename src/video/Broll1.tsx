@@ -128,21 +128,21 @@ export const Broll1: React.FC = () => {
       
       {/* ---------------- 🎵 SFX SECTION ---------------- */}
       {/* Scene Intro: ስልኩ መሃል ላይ ብቅ ሲል */}
-      {frame === 0 && <Audio src={staticFile("audio/whoosh.mp3")} volume={0.4} />}
+      {frame === 0 && <Audio src={staticFile("audio/whoosh.mp3")} volume={0.6} />}
 
       {/* Sparkle Burst: በ Frame 30 ላይ ፍንጣሪዎቹ ሲወጡ */}
-      {frame === 30 && <Audio src={staticFile("audio/pop.mp3")} volume={0.5} />}
+      {frame === 30 && <Audio src={staticFile("audio/pop.mp3")} volume={0.6} />}
 
       {/* Screen Transition: ስልኩ ወደ ጥግ ሄዶ የኮምፒውተር ምስሉ ሲመጣ */}
-      {frame === 45 && <Audio src={staticFile("audio/whoosh.mp3")} volume={0.4} />}
+      {frame === 45 && <Audio src={staticFile("audio/whoosh.mp3")} volume={0.6} />}
 
       {/* Interface Lock: ምስሉ መሃል ላይ ቦታውን በትክክል ሲይዝ */}
-      {frame === 55 && <Audio src={staticFile("audio/pop.mp3")} volume={0.3} />}
+      {frame === 55 && <Audio src={staticFile("audio/pop.mp3")} volume={0.6} />}
 
       {/* Energy Drain & Clock: ሰዓቱ መሽከርከር እና ባትሪው መቀነስ ሲጀምር */}
-      {frame === 60 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
-      {frame === 68 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
-      {frame === 76 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
+      {frame === 60 && <Audio src={staticFile("audio/click.mp3")} volume={0.7} />}
+      {frame === 68 && <Audio src={staticFile("audio/click.mp3")} volume={0.7} />}
+      {frame === 76 && <Audio src={staticFile("audio/click.mp3")} volume={0.7} />}
       {/* -------------------------------------------------- */}
 
       <div
