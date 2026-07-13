@@ -3,7 +3,7 @@ import { AbsoluteFill, useCurrentFrame, interpolate, Easing } from "remotion";
 import { Eye, BookOpen, Search, Lightbulb, PenLine, Copy, Workflow, CheckCircle2 } from "lucide-react";
 
 /**
- * Broll4 — Frames 721–870 (local 0–149)
+ * Broll4 — Frames 721–920 (local 0–199)
  * Topic: INSPIRE then MODEL
  * Story: split screen comparison (left = Inspire actions, right = Model actions)
  * with staggered rows, animated connecting arrows, checklist completion,
@@ -30,66 +30,66 @@ const rightItems = [
 export const Broll4: React.FC = () => {
   const frame = useCurrentFrame();
 
-  /* ---------------- Master timing ---------------- */
-  const fadeIn = interpolate(frame, [0, 10], [0, 1], {
+  /* ---------------- Master timing (Scaled to 200 frames) ---------------- */
+  const fadeIn = interpolate(frame, [0, 15], [0, 1], {
     easing: Easing.out(Easing.cubic),
     extrapolateRight: "clamp",
   });
-  const fadeOut = interpolate(frame, [136, 150], [1, 0], {
+  const fadeOut = interpolate(frame, [180, 200], [1, 0], {
     easing: Easing.in(Easing.cubic),
     extrapolateLeft: "clamp",
   });
   const sceneOpacity = Math.min(fadeIn, fadeOut);
 
-  /* ---------------- Split-screen panels (visible 10-118) ---------------- */
-  const panelsOpacity = interpolate(frame, [10, 18, 112, 122], [0, 1, 1, 0], {
+  /* ---------------- Split-screen panels (visible 15-155) ---------------- */
+  const panelsOpacity = interpolate(frame, [15, 25, 145, 158], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const panelsSlide = interpolate(frame, [112, 124], [0, 1], {
+  const panelsSlide = interpolate(frame, [145, 162], [0, 1], {
     easing: Easing.in(Easing.cubic),
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  const dividerScale = interpolate(frame, [4, 14], [0, 1], {
+  const dividerScale = interpolate(frame, [5, 20], [0, 1], {
     easing: Easing.out(Easing.cubic),
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  const headerY = interpolate(frame, [10, 20], [-16, 0], {
+  const headerY = interpolate(frame, [15, 30], [-16, 0], {
     easing: Easing.out(Easing.cubic),
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const headerOpacity = interpolate(frame, [10, 20], [0, 1], {
+  const headerOpacity = interpolate(frame, [15, 30], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
   /* arrows connecting the two sides */
-  const arrowDraw = clamp(interpolate(frame, [70, 92], [0, 1]));
-  const arrowOpacity = interpolate(frame, [68, 74, 108, 116], [0, 1, 1, 0], {
+  const arrowDraw = clamp(interpolate(frame, [90, 120], [0, 1]));
+  const arrowOpacity = interpolate(frame, [88, 98, 140, 152], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  /* ---------------- Final centered typography (126-150) ---------------- */
-  const typoOpacity = interpolate(frame, [126, 134], [0, 1], {
+  /* ---------------- Final centered typography (165-200) ---------------- */
+  const typoOpacity = interpolate(frame, [165, 175], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const typoScale = interpolate(frame, [126, 136], [0.9, 1], {
+  const typoScale = interpolate(frame, [165, 178], [0.9, 1], {
     easing: Easing.out(Easing.cubic),
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const arrowDownOpacity = interpolate(frame, [132, 138], [0, 1], {
+  const arrowDownOpacity = interpolate(frame, [172, 180], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const modelOpacity = interpolate(frame, [138, 145], [0, 1], {
+  const modelOpacity = interpolate(frame, [180, 190], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
@@ -142,28 +142,29 @@ export const Broll4: React.FC = () => {
             position: "absolute",
             top: "10%",
             left: "50%",
-            width: 2,
+            width: 3,
             height: "80%",
             backgroundColor: "#5A8CFF",
-            boxShadow: "0 0 16px rgba(90,140,255,0.8)",
+            boxShadow: "0 0 24px rgba(90,140,255,0.9)",
             transform: `translateX(-50%) scaleY(${dividerScale})`,
             transformOrigin: "top",
           }}
         />
 
-        {/* headers */}
+        {/* headers (Increased font size from 38 to 48 for TikTok) */}
         <div
           style={{
             position: "absolute",
-            top: "8%",
+            top: "10%",
             left: "25%",
             transform: `translate(-50%, ${headerY}px)`,
             opacity: headerOpacity,
             fontFamily: "system-ui, sans-serif",
             fontWeight: 900,
-            fontSize: 38,
+            fontSize: 48,
             color: "#5A8CFF",
             letterSpacing: 2,
+            textShadow: "0px 4px 12px rgba(0,0,0,0.5)",
           }}
         >
           INSPIRE
@@ -171,36 +172,37 @@ export const Broll4: React.FC = () => {
         <div
           style={{
             position: "absolute",
-            top: "8%",
+            top: "10%",
             left: "75%",
             transform: `translate(-50%, ${headerY}px)`,
             opacity: headerOpacity,
             fontFamily: "system-ui, sans-serif",
             fontWeight: 900,
-            fontSize: 38,
+            fontSize: 48,
             color: "#5A8CFF",
             letterSpacing: 2,
+            textShadow: "0px 4px 12px rgba(0,0,0,0.5)",
           }}
         >
           MODEL
         </div>
 
-        {/* left column rows */}
+        {/* left column rows (Increased width & gap, increased label size to 28, icons to 32) */}
         <div
           style={{
             position: "absolute",
-            top: "22%",
-            left: "8%",
-            width: "34%",
+            top: "24%",
+            left: "6%",
+            width: "38%",
             display: "flex",
             flexDirection: "column",
-            gap: 22,
+            gap: 32,
           }}
         >
           {leftItems.map((item, i) => {
-            const local = frame - 24 - i * 10;
-            const pop = clamp(interpolate(local, [0, 12], [0, 1]));
-            const tick = clamp(interpolate(frame - 96 - i * 4, [0, 10], [0, 1]));
+            const local = frame - 32 - i * 14;
+            const pop = clamp(interpolate(local, [0, 15], [0, 1]));
+            const tick = clamp(interpolate(frame - 120 - i * 5, [0, 12], [0, 1]));
             const Icon = tick > 0.5 ? CheckCircle2 : item.icon;
             return (
               <div
@@ -208,13 +210,13 @@ export const Broll4: React.FC = () => {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 12,
+                  gap: 16,
                   opacity: pop,
                   transform: `translateX(${(1 - pop) * -24}px)`,
                 }}
               >
-                <Icon size={22} color={tick > 0.5 ? "#3ED598" : "#8fa8e8"} strokeWidth={1.75} />
-                <span style={{ fontFamily: "system-ui, sans-serif", fontWeight: 700, fontSize: 22, color: "#ffffff" }}>
+                <Icon size={32} color={tick > 0.5 ? "#3ED598" : "#8fa8e8"} strokeWidth={2.2} />
+                <span style={{ fontFamily: "system-ui, sans-serif", fontWeight: 800, fontSize: 28, color: "#ffffff" }}>
                   {item.label}
                 </span>
               </div>
@@ -222,22 +224,22 @@ export const Broll4: React.FC = () => {
           })}
         </div>
 
-        {/* right column rows */}
+        {/* right column rows (Increased width & gap, increased label size to 28, icons to 32) */}
         <div
           style={{
             position: "absolute",
-            top: "22%",
-            right: "8%",
-            width: "34%",
+            top: "24%",
+            right: "4%",
+            width: "38%",
             display: "flex",
             flexDirection: "column",
-            gap: 22,
+            gap: 32,
           }}
         >
           {rightItems.map((item, i) => {
-            const local = frame - 30 - i * 10;
-            const pop = clamp(interpolate(local, [0, 12], [0, 1]));
-            const tick = clamp(interpolate(frame - 100 - i * 4, [0, 10], [0, 1]));
+            const local = frame - 40 - i * 14;
+            const pop = clamp(interpolate(local, [0, 15], [0, 1]));
+            const tick = clamp(interpolate(frame - 125 - i * 5, [0, 12], [0, 1]));
             const Icon = tick > 0.5 ? CheckCircle2 : item.icon;
             return (
               <div
@@ -245,13 +247,13 @@ export const Broll4: React.FC = () => {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: 12,
+                  gap: 16,
                   opacity: pop,
                   transform: `translateX(${(1 - pop) * 24}px)`,
                 }}
               >
-                <Icon size={22} color={tick > 0.5 ? "#3ED598" : "#8fa8e8"} strokeWidth={1.75} />
-                <span style={{ fontFamily: "system-ui, sans-serif", fontWeight: 700, fontSize: 22, color: "#ffffff" }}>
+                <Icon size={32} color={tick > 0.5 ? "#3ED598" : "#8fa8e8"} strokeWidth={2.2} />
+                <span style={{ fontFamily: "system-ui, sans-serif", fontWeight: 800, fontSize: 28, color: "#ffffff" }}>
                   {item.label}
                 </span>
               </div>
@@ -266,15 +268,15 @@ export const Broll4: React.FC = () => {
           style={{ position: "absolute", top: 0, left: 0, opacity: arrowOpacity }}
         >
           {[0, 1].map((i) => {
-            const y = 240 + i * 90;
+            const y = 265 + i * 128;
             const pathLength = 180;
             return (
               <path
                 key={i}
-                d={`M 42% ${y} C 48% ${y}, 52% ${y}, 58% ${y}`}
+                d={`M 43% ${y} C 48% ${y}, 52% ${y}, 57% ${y}`}
                 fill="none"
                 stroke="#5A8CFF"
-                strokeWidth={2.5}
+                strokeWidth={3.5}
                 strokeLinecap="round"
                 markerEnd="url(#arrowhead)"
                 strokeDasharray={pathLength}
@@ -283,8 +285,8 @@ export const Broll4: React.FC = () => {
             );
           })}
           <defs>
-            <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
-              <path d="M0,0 L8,4 L0,8 Z" fill="#5A8CFF" />
+            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="4" refY="5" orient="auto">
+              <path d="M0,1 L10,5 L0,9 Z" fill="#5A8CFF" />
             </marker>
           </defs>
         </svg>
@@ -297,7 +299,7 @@ export const Broll4: React.FC = () => {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 10,
+            gap: 14,
             transform: `scale(${typoScale})`,
           }}
         >
@@ -306,9 +308,10 @@ export const Broll4: React.FC = () => {
               opacity: typoOpacity,
               fontFamily: "system-ui, sans-serif",
               fontWeight: 900,
-              fontSize: 84,
+              fontSize: 94,
               color: "#5A8CFF",
               letterSpacing: 2,
+              textShadow: "0px 8px 24px rgba(90,140,255,0.3)",
             }}
           >
             INSPIRE
@@ -316,8 +319,9 @@ export const Broll4: React.FC = () => {
           <div
             style={{
               opacity: arrowDownOpacity,
-              fontSize: 46,
-              color: "rgba(255,255,255,0.6)",
+              fontSize: 56,
+              color: "rgba(255,255,255,0.8)",
+              fontWeight: "bold",
             }}
           >
             ↓
@@ -327,9 +331,10 @@ export const Broll4: React.FC = () => {
               opacity: modelOpacity,
               fontFamily: "system-ui, sans-serif",
               fontWeight: 900,
-              fontSize: 84,
+              fontSize: 94,
               color: "#5A8CFF",
               letterSpacing: 2,
+              textShadow: "0px 8px 24px rgba(90,140,255,0.3)",
             }}
           >
             MODEL

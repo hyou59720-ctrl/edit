@@ -1,14 +1,6 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, interpolate, Easing } from "remotion";
-import { Film, MessageCircle, Building2, TrendingUp, Loader2 } from "lucide-react";
-
-/**
- * Broll2 — Frames 271–365 (local 0–94)
- * Topic: Video editing → Agency
- * Story: editing timeline → color grading → rendering → client message →
- * money notification → agency dashboard with revenue growth → fade back to A-roll.
- * Fully covers the A-roll (opaque luxury workspace) then fades out at the end.
- */
+import { AbsoluteFill, useCurrentFrame, interpolate, Easing, Audio, staticFile } from "remotion";
+import { Film, Building2, TrendingUp, Scissors, Play } from "lucide-react";
 
 const clamp = (v: number, min = 0, max = 1) => Math.min(max, Math.max(min, v));
 
@@ -20,75 +12,79 @@ export const Broll2: React.FC = () => {
     easing: Easing.out(Easing.cubic),
     extrapolateRight: "clamp",
   });
-  const fadeOut = interpolate(frame, [80, 95], [1, 0], {
+  const fadeOut = interpolate(frame, [85, 95], [1, 0], {
     easing: Easing.in(Easing.cubic),
     extrapolateLeft: "clamp",
   });
   const sceneOpacity = Math.min(fadeIn, fadeOut);
 
-  const sceneScale = interpolate(frame, [0, 95], [1, 1.05], {
+  const sceneScale = interpolate(frame, [0, 95], [1, 1.02], {
     easing: Easing.bezier(0.25, 0.1, 0.25, 1),
     extrapolateRight: "clamp",
   });
 
-  /* ---------------- Phase A: editing timeline (8-28) ---------------- */
-  const timelineOpacity = interpolate(frame, [8, 14, 30, 36], [0, 1, 1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const playheadX = interpolate(frame, [8, 30], [0, 100], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-
-  /* ---------------- Phase B: color grading (26-42) ---------------- */
-  const gradeOpacity = interpolate(frame, [26, 32, 42, 48], [0, 1, 1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const gradeMix = clamp(interpolate(frame, [26, 42], [0, 1]));
-  const wheelRotation = frame * 4;
-
-  /* ---------------- Phase C: rendering (40-54) ---------------- */
-  const renderOpacity = interpolate(frame, [40, 45, 54, 59], [0, 1, 1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const renderPercent = Math.round(clamp(interpolate(frame, [40, 54], [0, 1])) * 100);
-  const spinnerRotation = frame * 10;
-
-  /* ---------------- Phase D: client message (52-66) ---------------- */
-  const clientOpacity = interpolate(frame, [52, 58, 66, 71], [0, 1, 1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const clientY = interpolate(frame, [52, 60], [20, 0], {
+  /* ---------------- Animation Timings ---------------- */
+  // 1. VIDEO EDITING SCREEN
+  const editOpacity = interpolate(frame, [0, 8], [0, 1], { extrapolateRight: "clamp" });
+  
+  // ኤዲቱ ከበፊቱ በበለጠ ወደ ላይ (ወደ 18%) ከፍ ብሏል ለታችኛው ቦታ ለመስጠት
+  const editTopLocation = interpolate(frame, [40, 52], [45, 18], {
     easing: Easing.out(Easing.cubic),
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  /* ---------------- Phase E: money notification (64-77) ---------------- */
-  const moneyOpacity = interpolate(frame, [64, 70, 77, 82], [0, 1, 1, 0], {
+  const playheadX = interpolate(frame, [0, 90], [10, 90], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const moneyScale = interpolate(frame, [64, 71], [0.85, 1], {
+
+  // 2. AGENCY DASHBOARD SCREEN (ጽሑፉ እንዳይሸፍነው ወደ ላይ ከፍ ተደርጓል)
+  const agencyOpacity = interpolate(frame, [45, 55], [0, 1], { extrapolateLeft: "clamp" });
+  
+  // ከ 63% የነበረውን ወደ 54% ከፍ አድርገነዋል (ከጽሑፉ ነፃ እንዲሆን)
+  const agencyTopLocation = interpolate(frame, [40, 52], [63, 54], {
     easing: Easing.out(Easing.cubic),
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  /* ---------------- Phase F: agency dashboard (75-90) ---------------- */
-  const dashOpacity = interpolate(frame, [75, 81, 90], [0, 1, 1], {
+  const agencyYPosition = interpolate(frame, [45, 55], [60, 0], {
+    easing: Easing.out(Easing.cubic),
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const graphDraw = clamp(interpolate(frame, [75, 90], [0, 1]));
-  const pathLength = 220;
+
+  // የኢትዮጵያ ብር ቁጥር አኒሜሽን
+  const rawBrAmount = interpolate(frame, [48, 80], [0, 45500], {
+    easing: Easing.out(Easing.quad),
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const formattedBr = Math.round(rawBrAmount).toLocaleString();
+
+  const bars = [0, 1, 2, 3];
 
   return (
     <AbsoluteFill style={{ opacity: sceneOpacity, pointerEvents: "none" }}>
+      
+      {/* ---------------- 🎵 SOUND EFFECTS ---------------- */}
+      {/* የመጀመሪያው ስክሪን ሲገባ የሚሰማ የሽውታ ድምፅ */}
+      {frame === 0 && <Audio src={staticFile("audio/whoosh.mp3")} volume={0.4} />}
+      
+      {/* ኤዲቲንግ ኢንተርፌስ ሙሉ በሙሉ ታይቶ ሲያበቃ (Frame 10) */}
+      {frame === 10 && <Audio src={staticFile("audio/pop.mp3")} volume={0.3} />}
+      
+      {/* የኤጀንሲው ዴሽቦርድ ወደ ላይ ከፍ እያለ ሲመጣ (Frame 45) */}
+      {frame === 45 && <Audio src={staticFile("audio/whoosh.mp3")} volume={0.4} />}
+      
+      {/* የግራፍ አሞሌዎች (Bars) በየተራ ብቅ ሲሉ እና የብር ቁጥሩ መቆጠር ሲጀምር */}
+      {frame === 48 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
+      {frame === 53 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
+      {frame === 58 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
+      {frame === 63 && <Audio src={staticFile("audio/click.mp3")} volume={0.3} />}
+      {/* -------------------------------------------------- */}
+
       <div
         style={{
           width: "100%",
@@ -97,295 +93,146 @@ export const Broll2: React.FC = () => {
           transformOrigin: "center center",
         }}
       >
-        {/* Luxury cool-toned office background */}
+        {/* Luxury office background */}
         <AbsoluteFill
           style={{
             background:
               "radial-gradient(ellipse at 50% 30%, #1a2230 0%, #0d1117 55%, #030405 100%)",
           }}
         />
-        {/* cool rim light */}
         <div
           style={{
             position: "absolute",
             top: "10%",
             left: "50%",
-            width: 700,
-            height: 500,
+            width: 900,
+            height: 600,
             transform: "translateX(-50%)",
             borderRadius: "50%",
             background:
               "radial-gradient(circle, rgba(90,140,255,0.22) 0%, rgba(90,140,255,0) 70%)",
           }}
         />
-        <AbsoluteFill
-          style={{
-            background:
-              "radial-gradient(ellipse at center, rgba(0,0,0,0) 50%, rgba(0,0,0,0.6) 100%)",
-          }}
-        />
 
-        {/* ---------- Phase A: editing timeline ---------- */}
+        {/* ---------- 🎬 SCREEN 1: VIDEO EDITING SOFTWARE ---------- */}
         <div
           style={{
             position: "absolute",
-            top: "38%",
+            top: `${editTopLocation}%`,
             left: "50%",
             transform: "translate(-50%, -50%)",
-            opacity: timelineOpacity,
-            width: 420,
+            opacity: editOpacity,
+            width: 800,
           }}
         >
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-            <Film size={18} color="#9fb4ff" strokeWidth={1.75} />
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+            <Film size={22} color="#5A8CFF" strokeWidth={2.5} />
             <span
               style={{
                 fontFamily: "system-ui, sans-serif",
-                fontSize: 13,
-                fontWeight: 600,
-                color: "#9fb4ff",
-                letterSpacing: 1,
+                fontSize: 16,
+                fontWeight: 800,
+                color: "#5A8CFF",
+                letterSpacing: 1.5,
               }}
             >
-              TIMELINE
+              VIDEO EDITING INTERFACE
             </span>
           </div>
+
           <div
             style={{
               position: "relative",
-              height: 46,
-              borderRadius: 8,
-              backgroundColor: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: 12,
+              backgroundColor: "#141923",
+              border: "2px solid rgba(90,140,255,0.3)",
+              padding: "20px",
               display: "flex",
-              overflow: "hidden",
-            }}
-          >
-            {["#5A8CFF", "#3ED598", "#FFC43D", "#FF7A5A", "#9C6BFF"].map((c, i) => (
-              <div
-                key={i}
-                style={{
-                  flex: 1,
-                  backgroundColor: c,
-                  opacity: 0.55,
-                  borderRight: "1px solid rgba(0,0,0,0.3)",
-                }}
-              />
-            ))}
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                bottom: 0,
-                left: `${playheadX}%`,
-                width: 2,
-                backgroundColor: "#ffffff",
-                boxShadow: "0 0 8px rgba(255,255,255,0.8)",
-              }}
-            />
-          </div>
-        </div>
-
-        {/* ---------- Phase B: color grading ---------- */}
-        <div
-          style={{
-            position: "absolute",
-            top: "36%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            opacity: gradeOpacity,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 18,
-          }}
-        >
-          <div
-            style={{
-              width: 260,
-              height: 150,
-              borderRadius: 10,
-              overflow: "hidden",
-              position: "relative",
-              border: "1px solid rgba(255,255,255,0.12)",
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background: "linear-gradient(135deg, #3a3f52 0%, #23262f 100%)",
-                filter: `saturate(${1 + gradeMix * 0.6}) contrast(${1 + gradeMix * 0.25}) brightness(${1 - gradeMix * 0.05})`,
-              }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                background:
-                  "linear-gradient(90deg, rgba(255,150,80,0.18), rgba(80,150,255,0.18))",
-                opacity: gradeMix,
-              }}
-            />
-          </div>
-          <div style={{ display: "flex", gap: 20 }}>
-            {["#FF7A5A", "#B3B3B3", "#5A8CFF"].map((c, i) => (
-              <div
-                key={i}
-                style={{
-                  width: 34,
-                  height: 34,
-                  borderRadius: "50%",
-                  border: `2px solid ${c}`,
-                  position: "relative",
-                }}
-              >
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    width: 2,
-                    height: 12,
-                    backgroundColor: c,
-                    transformOrigin: "50% 100%",
-                    transform: `translate(-50%, -100%) rotate(${wheelRotation + i * 40}deg)`,
-                  }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* ---------- Phase C: rendering ---------- */}
-        <div
-          style={{
-            position: "absolute",
-            top: "40%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            opacity: renderOpacity,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 14,
-          }}
-        >
-          <Loader2
-            size={34}
-            color="#ffffff"
-            strokeWidth={2}
-            style={{ transform: `rotate(${spinnerRotation}deg)` }}
-          />
-          <div
-            style={{
-              fontFamily: "system-ui, sans-serif",
-              fontWeight: 800,
-              fontSize: 34,
-              color: "#ffffff",
-              letterSpacing: 1,
-            }}
-          >
-            {renderPercent}%
-          </div>
-          <div
-            style={{
-              width: 220,
-              height: 5,
-              borderRadius: 4,
-              backgroundColor: "rgba(255,255,255,0.12)",
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                height: "100%",
-                width: `${renderPercent}%`,
-                background: "linear-gradient(90deg, #5A8CFF, #3ED598)",
-              }}
-            />
-          </div>
-        </div>
-
-        {/* ---------- Phase D: client message ---------- */}
-        <div
-          style={{
-            position: "absolute",
-            top: "38%",
-            left: "50%",
-            transform: `translate(-50%, ${clientY}px)`,
-            opacity: clientOpacity,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "16px 26px",
-              borderRadius: 18,
-              backgroundColor: "rgba(255,255,255,0.08)",
-              border: "1px solid rgba(255,255,255,0.15)",
-              backdropFilter: "blur(6px)",
-            }}
-          >
-            <MessageCircle size={22} color="#3ED598" strokeWidth={1.75} />
-            <span
-              style={{
-                fontFamily: "system-ui, sans-serif",
-                fontWeight: 700,
-                fontSize: 22,
-                color: "#ffffff",
-              }}
-            >
-              "This looks incredible 🔥"
-            </span>
-          </div>
-        </div>
-
-        {/* ---------- Phase E: money notification ---------- */}
-        <div
-          style={{
-            position: "absolute",
-            top: "38%",
-            left: "50%",
-            transform: `translate(-50%, -50%) scale(${moneyScale})`,
-            opacity: moneyOpacity,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 12,
-              padding: "18px 30px",
-              borderRadius: 16,
-              backgroundColor: "#ffffff",
+              flexDirection: "column",
+              gap: 16,
               boxShadow: "0 20px 50px rgba(0,0,0,0.5)",
             }}
           >
-            <span
+            <div style={{ display: "flex", gap: 20, height: 160 }}>
+              <div
+                style={{
+                  flex: 1.5,
+                  backgroundColor: "#0d1117",
+                  borderRadius: 8,
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  position: "relative",
+                }}
+              >
+                <div style={{ width: 60, height: 60, borderRadius: "50%", backgroundColor: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Play size={28} color="#ffffff" fill="#ffffff" style={{ marginLeft: 4 }} />
+                </div>
+              </div>
+
+              <div
+                style={{
+                  flex: 1,
+                  backgroundColor: "#0d1117",
+                  borderRadius: 8,
+                  border: "1px solid rgba(255,255,255,0.1)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Scissors size={64} color="#5A8CFF" strokeWidth={1.5} style={{ opacity: 0.8 }} />
+              </div>
+            </div>
+
+            <div
               style={{
-                fontFamily: "system-ui, sans-serif",
-                fontWeight: 900,
-                fontSize: 30,
-                color: "#1EC86B",
+                backgroundColor: "#0d1117",
+                borderRadius: 8,
+                padding: "14px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 8,
+                position: "relative",
               }}
             >
-              + 4,200 ETB
-            </span>
+              <div style={{ display: "flex", gap: 6, height: 24 }}>
+                <div style={{ width: "40%", backgroundColor: "#FFC43D", borderRadius: 4, opacity: 0.9 }} />
+                <div style={{ width: "45%", backgroundColor: "#5A8CFF", borderRadius: 4, opacity: 0.9 }} />
+              </div>
+              <div style={{ display: "flex", gap: 6, height: 18 }}>
+                <div style={{ width: "25%", backgroundColor: "#5A8CFF", borderRadius: 4, opacity: 0.8 }} />
+                <div style={{ width: "50%", backgroundColor: "#3ED598", borderRadius: 4, opacity: 0.8 }} />
+              </div>
+
+              <div
+                style={{
+                  position: "absolute",
+                  top: 0,
+                  bottom: 0,
+                  left: `${playheadX}%`,
+                  width: 3,
+                  backgroundColor: "#FF4A4A",
+                  boxShadow: "0 0 10px #FF4A4A",
+                  zIndex: 10,
+                }}
+              >
+                <div style={{ position: "absolute", top: -4, left: -4, width: 11, height: 8, backgroundColor: "#FF4A4A", borderRadius: 2 }} />
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* ---------- Phase F: agency dashboard ---------- */}
+        {/* ---------- 🏢 SCREEN 2: AGENCY DASHBOARD (ቁመት ጨምሮ ወደ ላይ ከፍ ብሏል) ---------- */}
         <div
           style={{
             position: "absolute",
-            bottom: "16%",
+            top: `${agencyTopLocation}%`, // ከጽሑፍ ነፃ እንዲሆን ተስተካክሏል
             left: "50%",
-            transform: "translateX(-50%)",
-            opacity: dashOpacity,
-            width: 420,
+            transform: `translate(-50%, -50%) translateY(${agencyYPosition}px)`,
+            opacity: agencyOpacity,
+            width: 800,
           }}
         >
           <div
@@ -393,58 +240,105 @@ export const Broll2: React.FC = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
-              marginBottom: 10,
+              marginBottom: 12,
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <Building2 size={18} color="#ffffff" strokeWidth={1.75} />
+              <Building2 size={22} color="#f59e0b" strokeWidth={2.5} />
               <span
                 style={{
                   fontFamily: "system-ui, sans-serif",
                   fontWeight: 800,
-                  fontSize: 15,
-                  color: "#ffffff",
-                  letterSpacing: 1,
+                  fontSize: 16,
+                  color: "#f59e0b",
+                  letterSpacing: 1.5,
                 }}
               >
-                AGENCY DASHBOARD
+                VIDEO AGENCY GROWTH
               </span>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-              <TrendingUp size={16} color="#3ED598" strokeWidth={2} />
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <TrendingUp size={20} color="#f59e0b" strokeWidth={2.5} />
               <span
                 style={{
                   fontFamily: "system-ui, sans-serif",
-                  fontWeight: 800,
-                  fontSize: 15,
-                  color: "#3ED598",
+                  fontWeight: 900,
+                  fontSize: 18,
+                  color: "#f59e0b",
                 }}
               >
                 +38%
               </span>
             </div>
           </div>
+
           <div
             style={{
               borderRadius: 12,
-              backgroundColor: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              padding: "16px 18px",
+              backgroundColor: "#141923",
+              border: "2px solid rgba(245,158,11,0.3)",
+              padding: "30px 35px", // ቁመት ለመጨመር padding ጨምረናል
+              boxShadow: "0 25px 60px rgba(0,0,0,0.6)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 40,
             }}
           >
-            <svg width="100%" height="70" viewBox="0 0 380 70">
-              <path
-                d="M 0 55 Q 60 50, 100 40 T 200 28 T 300 14 T 380 6"
-                fill="none"
-                stroke="#3ED598"
-                strokeWidth="3"
-                strokeLinecap="round"
-                strokeDasharray={pathLength}
-                strokeDashoffset={pathLength * (1 - graphDraw)}
-              />
+            {/* የኢትዮጵያ ብር መጠን ማሳያ */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <div style={{ fontFamily: "system-ui, sans-serif", fontSize: 13, color: "rgba(255,255,255,0.4)", fontWeight: 700, letterSpacing: 1 }}>
+                TOTAL REVENUE
+              </div>
+              <div 
+                style={{ 
+                  fontFamily: "system-ui, sans-serif", 
+                  fontSize: 46, 
+                  fontWeight: 950, 
+                  color: "#fde047",
+                  textShadow: "0 0 15px rgba(253,224,71,0.25)"
+                }}
+              >
+                {formattedBr} ETB
+              </div>
+            </div>
+
+            {/* 🚀 ቁመታቸው የጨመረ 4 አሞሌዎች (Taller Growth Bars) */}
+            <svg width={300} height={150} viewBox="0 0 240 130" style={{ overflow: "visible" }}>
+              <defs>
+                <linearGradient id="agencyGrad" x1="0" y1="1" x2="0" y2="0">
+                  <stop offset="0%" stopColor="#f59e0b" />
+                  <stop offset="100%" stopColor="#fde047" />
+                </linearGradient>
+              </defs>
+              {bars.map((i) => {
+                const barStart = 48 + i * 5;
+                // ቁመታቸውን ይበልጥ ረጅም አድርገነዋል (ከ30-90 የነበረው አሁን እስከ 115 ያድጋል)
+                const targetHeight = 35 + i * 26; 
+                const h = interpolate(frame, [barStart, barStart + 12], [0, targetHeight], {
+                  easing: Easing.out(Easing.cubic),
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                });
+                const x = 15 + i * 56;
+                return (
+                  <rect
+                    key={i}
+                    x={x}
+                    y={120 - h} // ከታች መስመሩ ላይ ተነስተው ወደ ላይ ያድጋሉ
+                    width={40}
+                    height={h}
+                    rx="6"
+                    fill="url(#agencyGrad)"
+                    opacity={0.95}
+                  />
+                );
+              })}
+              <line x1="0" y1="120" x2="230" y2="120" stroke="rgba(255,255,255,0.15)" strokeWidth="3" />
             </svg>
           </div>
         </div>
+
       </div>
     </AbsoluteFill>
   );

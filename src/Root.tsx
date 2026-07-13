@@ -18,7 +18,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition  
         id="TikTokMainVideo"  
         component={MainVideo}  
-        durationInFrames={1110}    // ~37 ሰከንድ (37 × 30fps = 1110)
+        durationInFrames={1135}    // ~37 ሰከንድ (37 × 30fps = 1110)
         fps={30}                   // ለቲክቶክ 30fps
         width={1080}               // TikTok Portrait Size
         height={1920}  
