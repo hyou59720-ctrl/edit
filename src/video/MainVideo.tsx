@@ -7,7 +7,10 @@ import {
   staticFile,
   interpolate,
   Easing,
-  Audio, // 'Audio' import ተደርጓል
+  // 'Audio' import ተደርጓል
+  Audio,
+  Solid,
+  Img,
 } from "remotion";
 import { subtitles, Subtitle } from "./Subtitles";
 import { Broll1 } from "./Broll1";
@@ -17,6 +20,10 @@ import { Broll4 } from "./Broll4";
 import { FontStyles } from "./Fonts";
 import { KEYWORD_STYLES, findKeyword } from "./keywordStyles";
 import { KeywordConceptVisual } from "./KeywordConceptVisual";
+import { brightness } from "@remotion/effects/brightness";
+import { blur } from "@remotion/effects/blur";
+import { mirror } from "@remotion/effects/mirror";
+import { colorKey } from "@remotion/effects/color-key";
 
 const AMHARIC_STYLE = {
   color: "#FFF5CC",
@@ -93,7 +100,7 @@ const BrollTransition: React.FC<{
     frame,
     [durationInFrames - WINDOW, durationInFrames],
     [0, 1],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
   const intensity = Math.max(entryIntensity, exitIntensity);
@@ -137,7 +144,12 @@ const BackgroundGraphics: React.FC = () => {
       />
       <svg className="absolute inset-0 w-full h-full opacity-[0.04] mix-blend-overlay">
         <filter id="grain">
-          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.85"
+            numOctaves="2"
+            stitchTiles="stitch"
+          />
         </filter>
         <rect width="100%" height="100%" filter="url(#grain)" />
       </svg>
@@ -183,7 +195,9 @@ const SubtitleWord: React.FC<{
   const fontSize = `${sizeSteps[sizeIndex]}px`;
 
   const direction: EntryDirection =
-    ENTRY_DIRECTIONS[Math.floor(seedA * ENTRY_DIRECTIONS.length) % ENTRY_DIRECTIONS.length];
+    ENTRY_DIRECTIONS[
+      Math.floor(seedA * ENTRY_DIRECTIONS.length) % ENTRY_DIRECTIONS.length
+    ];
 
   const travel = 40 + seedB * 25;
 
@@ -198,21 +212,29 @@ const SubtitleWord: React.FC<{
     frame,
     [wordStart, wordStart + revealDuration - 2],
     [0, 1],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
   const translateX = interpolate(
     frame,
     [wordStart, wordStart + revealDuration],
     [entryX, 0],
-    { easing: Easing.out(Easing.back(1.2)), extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+    {
+      easing: Easing.out(Easing.back(1.2)),
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    },
   );
 
   const translateY = interpolate(
     frame,
     [wordStart, wordStart + revealDuration],
     [entryY, 0],
-    { easing: Easing.out(Easing.back(1.2)), extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+    {
+      easing: Easing.out(Easing.back(1.2)),
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    },
   );
 
   const rotationSign = seedB > 0.5 ? 1 : -1;
@@ -221,7 +243,11 @@ const SubtitleWord: React.FC<{
     frame,
     [wordStart, wordStart + revealDuration],
     [entryRotation, 0],
-    { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+    {
+      easing: Easing.out(Easing.cubic),
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    },
   );
 
   const baselineOffset = (seedB - 0.5) * 16;
@@ -230,7 +256,11 @@ const SubtitleWord: React.FC<{
     frame,
     [wordStart, wordStart + revealDuration],
     [12, 0],
-    { easing: Easing.out(Easing.cubic), extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+    {
+      easing: Easing.out(Easing.cubic),
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    },
   );
 
   const totalDuration = chunk.endFrame - chunk.startFrame;
@@ -244,17 +274,22 @@ const SubtitleWord: React.FC<{
     frame,
     [activeWordStart, activeWordStart + 3, activeWordEnd - 2, activeWordEnd],
     [1, 1.18, 1.18, 1],
-    { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
 
   const activeWobble = isActive
     ? Math.sin((frame - activeWordStart) * 0.9) * 1.5
     : 0;
 
-  const exitOpacity = interpolate(frame, [fadeOutStart, chunk.endFrame], [1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  const exitOpacity = interpolate(
+    frame,
+    [fadeOutStart, chunk.endFrame],
+    [1, 0],
+    {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    },
+  );
 
   const baseOpacity = Math.min(enterOpacity, exitOpacity);
   const finalOpacity = isActive ? baseOpacity : baseOpacity * 0.6;
@@ -275,7 +310,9 @@ const SubtitleWord: React.FC<{
         padding: "0 6px",
         transformOrigin: "center center",
         ...(style
-          ? { filter: `blur(${blurAmount}px) drop-shadow(0px 4px 12px rgba(0,0,0,${isActive ? 0.9 : 0.5}))` }
+          ? {
+              filter: `blur(${blurAmount}px) drop-shadow(0px 4px 12px rgba(0,0,0,${isActive ? 0.9 : 0.5}))`,
+            }
           : {
               color: AMHARIC_STYLE.color,
               textShadow: AMHARIC_STYLE.textShadow,
@@ -292,11 +329,13 @@ export const MainVideo: React.FC = () => {
   const frame = useCurrentFrame();
 
   const currentSubtitle = subtitles.find(
-    (sub) => frame >= sub.startFrame && frame <= sub.endFrame
+    (sub) => frame >= sub.startFrame && frame <= sub.endFrame,
   );
 
   // SFX Timing Logic
-  const getSfxForFrame = (f: number): { src: string; volume: number } | null => {
+  const getSfxForFrame = (
+    f: number,
+  ): { src: string; volume: number } | null => {
     // 1. Scene Intro at Frame 0
     if (f === 0) {
       return { src: staticFile("audio/whoosh.mp3"), volume: 0.6 };
@@ -329,7 +368,7 @@ export const MainVideo: React.FC = () => {
       } else {
         // Amharic chunks often enter as a whole, play one sound
         if (f === currentSubtitle.startFrame) {
-            return { src: staticFile("audio/click.mp3"), volume: 0.7 };
+          return { src: staticFile("audio/click.mp3"), volume: 0.7 };
         }
       }
     }
@@ -347,11 +386,9 @@ export const MainVideo: React.FC = () => {
     <AbsoluteFill style={{ backgroundColor: "black" }}>
       {/* SFX Playback -> ምንም ማለቀያ የለውም፣ ራሱ ያልቃል */}
       {sfx && <Audio src={sfx.src} volume={sfx.volume} />}
-
       <FontStyles />
       <CameraLayer />
       <BackgroundGraphics />
-
       <Sequence from={91} durationInFrames={94}>
         <BrollTransition durationInFrames={94}>
           <Broll1 />
@@ -367,18 +404,16 @@ export const MainVideo: React.FC = () => {
           <Broll3 />
         </BrollTransition>
       </Sequence>
-      <Sequence from={721} durationInFrames={200}>
+      <Sequence from={721} durationInFrames={200} layout={"none"}>
         <BrollTransition durationInFrames={200}>
           <Broll4 />
         </BrollTransition>
       </Sequence>
-
       {currentSubtitle && (
         <AbsoluteFill style={{ pointerEvents: "none" }}>
           <KeywordConceptVisual chunk={currentSubtitle} frame={frame} />
         </AbsoluteFill>
       )}
-
       {currentSubtitle && (
         <div
           className="absolute w-full flex justify-center items-center px-6 gap-x-6 gap-y-3 flex-wrap max-w-[96%] left-[2%]"

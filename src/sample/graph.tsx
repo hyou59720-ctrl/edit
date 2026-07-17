@@ -11,8 +11,10 @@
  */
 
 "use client";
-
-import { interpolate, useCurrentFrame } from "remotion";
+import { interpolate, useCurrentFrame, Solid, staticFile, Img } from "remotion";
+import { paper } from "@remotion/effects/paper";
+import { glow } from "@remotion/effects/glow";
+import { zigzag } from "@remotion/effects/zigzag";
 
 export default function AreaChart() {
   const frame = useCurrentFrame();
@@ -51,12 +53,9 @@ export default function AreaChart() {
     ` L ${xScale(data[0].x)} ${chartHeight - padding} Z`;
 
   // Clip rect animation - reveals left to right
-  const clipWidth = interpolate(
-    frame,
-    [0, 60],
-    [0, chartWidth - padding * 2],
-    { extrapolateRight: "clamp" }
-  );
+  const clipWidth = interpolate(frame, [0, 60], [0, chartWidth - padding * 2], {
+    extrapolateRight: "clamp",
+  });
 
   return (
     <div
@@ -96,12 +95,7 @@ export default function AreaChart() {
 
             {/* Clip path for reveal animation */}
             <clipPath id="revealClip">
-              <rect
-                x={padding}
-                y={0}
-                width={clipWidth}
-                height={chartHeight}
-              />
+              <rect x={padding} y={0} width={clipWidth} height={chartHeight} />
             </clipPath>
           </defs>
 
@@ -189,7 +183,7 @@ export default function AreaChart() {
               frame,
               [5 + i * 6, 10 + i * 6],
               [0, 1],
-              { extrapolateLeft: "clamp", extrapolateRight: "clamp" }
+              { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
             );
 
             return (
@@ -224,6 +218,15 @@ export default function AreaChart() {
           Performance Metrics
         </div>
       </div>
+      <Solid
+        width={1080}
+        height={1920}
+        style={{
+          position: "absolute",
+          opacity: 0.2,
+        }}
+        effects={[zigzag({})]}
+      />
     </div>
   );
 }

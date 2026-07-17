@@ -1,4 +1,10 @@
-import { AbsoluteFill, Sequence } from "remotion";
+import {
+  AbsoluteFill,
+  Sequence,
+  interpolate,
+  useCurrentFrame,
+  Solid,
+} from "remotion";
 import { Background, Particles } from "./Helpers";
 import { Scene1 } from "./Scene1";
 import { Scene2 } from "./Scene2";
@@ -6,6 +12,7 @@ import { Scene3 } from "./Scene3";
 import { Scene4 } from "./Scene4";
 
 export const Tm: React.FC = () => {
+  const frame = useCurrentFrame();
   return (
     <AbsoluteFill className="font-sans">
       <Background />
@@ -14,7 +21,10 @@ export const Tm: React.FC = () => {
         from={0}
         durationInFrames={112}
         style={{
-          translate: "-2.5px 91.3px",
+          scale: interpolate(frame, [0, 63], ["3 1", 1], {
+            extrapolateLeft: "clamp",
+            extrapolateRight: "clamp",
+          }),
         }}
       >
         <Scene1 />

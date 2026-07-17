@@ -7,8 +7,12 @@
   "private": true,
   "dependencies": {
     "@remotion/cli": "4.0.489",
-    "@remotion/effects": "4.0.489",
+    "@remotion/effects": "^4.0.489",
     "@remotion/fonts": "4.0.489",
+    "@remotion/lottie": "^4.0.489",
+    "@remotion/media": "4.0.489",
+    "@remotion/motion-blur": "^4.0.489",
+    "@remotion/paths": "^4.0.489",
     "@remotion/tailwind-v4": "4.0.489",
     "@remotion/zod-types": "4.0.489",
     "lucide-react": "^1.24.0",
