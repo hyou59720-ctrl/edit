@@ -4,14 +4,16 @@ import { TelebirrAd } from "./Telebirr/TelebirrAd";
 import { RofiVideo } from "./rofi/rofi";
 import { Tm } from "./tm/Tm";
 import { Scene } from "./paper/Scene";
-
-// 🔥 አዲሱን ዋና የቲክቶክ ቪዲዮ መቆጣጠሪያ component import አደረግነው
 import { MainVideo } from "./video/MainVideo";
 import { TiktokSynchronizedVideo } from "./tiktok/TiktokSynchronizedVideo";
 
+// 🚀 አዲሱ እና ፍጹም እውር የሆነው የቪዲዮ መገጣጠሚያ
+import { VideoComposition } from './project/Template/VideoComposition';
+
 // አኒሜሽኖቹን ከ sample ፎልደር ውስጥ Import የተደረጉ
 import CircularProgress100 from "./sample/100%";
-import GraphAnimation from "./sample/graph";
+import { AppleCinematicHero } from './sample/graph'; // ቅንፍ {} መጨመርህን እርግጠኛ ሁን
+
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -67,14 +69,14 @@ export const RemotionRoot: React.FC = () => {
       />  
 
       {/* 3. ለ graph.tsx የተሰራ አዲስ Composition */}  
-      <Composition  
-        id="GraphAnimation"  
-        component={GraphAnimation}  
-        durationInFrames={150}     
-        fps={30}  
-        width={1080}  
-        height={1920}  
-      />  
+    <Composition
+      id="AppleCinematicHero"
+      component={AppleCinematicHero}
+      durationInFrames={400}
+      fps={60}
+      width={1920}
+      height={1080}
+    />
 
       {/* 4. የቴሌብር ማስታወቂያ */}  
       <Composition  
@@ -90,7 +92,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition  
         id="RofiVideo"  
         component={RofiVideo}  
-        durationInFrames={512}  
+        durationInFrames={509}  
         fps={30}  
         width={1080}               
         height={1920}  
@@ -104,6 +106,17 @@ export const RemotionRoot: React.FC = () => {
         fps={25}                 
         width={1920}
         height={1080}
+      />
+
+      {/* 🎯 አዲሱ ሙሉ በሙሉ በባዶ የሚነሳው የMrBeast መቆጣጠሪያ */}
+      <Composition
+        id="MrBeast-Vericentric-Video"
+        component={VideoComposition}
+        durationInFrames={701}
+        fps={30}
+        width={1080}
+        height={1920}
+        // እዚህ ጋር defaultProps የለም! ምክንያቱም VideoComposition ራሱ ዳታውን ከውስጥ ይስባል
       />
     </>
   );
