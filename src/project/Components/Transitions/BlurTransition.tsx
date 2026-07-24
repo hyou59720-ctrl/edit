@@ -1,25 +1,18 @@
 import React from "react";
-import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
+import { AbsoluteFill } from "remotion";
 import { TransitionProps } from "./types";
 
 export const BlurTransition: React.FC<TransitionProps> = ({
   children,
-  duration = 16,
+  progress = 0,
   maxBlur = 28,
 }) => {
-  const frame = useCurrentFrame();
-
-  const blur = interpolate(
-    frame,
-    [0, duration],
-    [maxBlur, 0],
-    { extrapolateRight: "clamp" }
-  );
+  const blur = progress * maxBlur;   // 👈 ተገልብጧል
 
   return (
     <AbsoluteFill
       style={{
-        filter: `blur(${blur}px)`,
+        filter: blur > 0.5 ? `blur(${blur}px)` : "none",
         willChange: "filter",
       }}
     >

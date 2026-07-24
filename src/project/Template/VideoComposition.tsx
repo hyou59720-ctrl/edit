@@ -1,42 +1,47 @@
-import React from "react";
-import { AbsoluteFill, Video, Sequence } from "remotion";
+import React, { useMemo } from "react";
+import { AbsoluteFill, OffthreadVideo, Sequence } from "remotion";
 import { Subtitle } from "./Subtitle";
-import { TransitionRenderer } from "./TransitionRenderer";
+import {
+  GlobalTransition,
+  GlobalTransitionConfig,
+} from "../Components/Transitions/GlobalTransition";
 import { videoData } from "../Videos/video1/data";
 
 export const VideoComposition: React.FC = () => {
-  return (
-    <AbsoluteFill>
-      {/* Main A-Roll */}
-      <Video
-        src={videoData.mainVideo}
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-        }}
-      />
+  const transitions: GlobalTransitionConfig[] = useMemo(
+    () =>
+      videoData.brolls
+        .filter((b) => b.transitionType)   // transitionType ያለው ብቻ
+        .map((b) => ({
+          frame: b.startFrame,
+          type: b.transitionType,
+          videoSrc: b.transitionVideoSrc,   // 👈 አዲስ - filmBurn/filmBurn2 መምረጫ
+        })),
+    []
+  );
 
-      {/* B-Roll Sequences */}
-      {videoData.brolls.map((broll, index) => (
-        <Sequence
-          key={index}
-          from={broll.startFrame}
-          durationInFrames={broll.endFrame - broll.startFrame}
-        >
-          <TransitionRenderer
-            transition={broll.transition}
-            duration={broll.transitionDuration ?? 16}
-            maxBlur={broll.transitionBlur ?? 28}
+  return (
+    <AbsoluteFill style={{ backgroundColor: "black" }}>
+      <GlobalTransition transitions={transitions}>
+        <OffthreadVideo
+          src={videoData.mainVideo}
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          pauseWhenBuffering
+        />
+
+        {videoData.brolls.map((broll, index) => (
+          <Sequence
+            key={index}
+            from={broll.startFrame}
+            durationInFrames={broll.endFrame - broll.startFrame}
           >
             <AbsoluteFill>
               <broll.component />
             </AbsoluteFill>
-          </TransitionRenderer>
-        </Sequence>
-      ))}
+          </Sequence>
+        ))}
+      </GlobalTransition>
 
-      {/* Subtitle */}
       <Subtitle items={videoData.subtitles} />
     </AbsoluteFill>
   );

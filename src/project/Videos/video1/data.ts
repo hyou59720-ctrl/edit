@@ -13,36 +13,17 @@ export const videoData = {
 
   // 2. የ B-roll ኮዶች (TSX) ከነ ፍሬማቸው — 5 broll
   brolls: [
-  {
-    component: IdeationBroll,
-    startFrame: 115,
-    endFrame: 200,
-  },
-  {
-    component: InfographicBroll,
-    startFrame: 316,
-    endFrame: 382,
-  },
-  {
-    component: FilmingBroll,
-    startFrame: 457,
-    endFrame: 556,
-
-    transition: "BlurTransition",
-
-    transitionDuration: 16,
-    transitionBlur: 28,
-  },
-  {
-    component: TimelineBroll,
-    startFrame: 556,
-    endFrame: 620,
-  },
-  {
-    component: MoneyBroll,
-    startFrame: 646,
-    endFrame: 700,
-  },
+  { component: IdeationBroll, startFrame: 115, endFrame: 200 },
+  { component: InfographicBroll, startFrame: 316, endFrame: 382 },
+{
+  component: FilmingBroll,
+  startFrame: 457,
+  endFrame: 556,
+  transitionType: "filmBurn",
+  transitionVideoSrc: "filmBurn",
+},
+  { component: TimelineBroll, startFrame: 556, endFrame: 620 },
+  { component: MoneyBroll, startFrame: 646, endFrame: 700 },
 ],
 
   // 3. እያንዳንዱ ቃል ሳይሳሳት የተዘጋጀው ሙሉ የሰብታይትል ዝርዝር
