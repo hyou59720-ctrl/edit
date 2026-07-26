@@ -35,7 +35,7 @@
   },
   "scripts": {
     "dev": "remotion studio",
-    "build": "remotion render RofiVideo out/video.mp4",
+    "build": "remotion render MrBeast-Vericentric-Video out/video.mp4",
     "upgrade": "remotion upgrade",
     "lint": "eslint src && tsc"
   },
