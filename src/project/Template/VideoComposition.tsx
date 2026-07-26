@@ -11,13 +11,13 @@ export const VideoComposition: React.FC = () => {
   const transitions: GlobalTransitionConfig[] = useMemo(
     () =>
       videoData.brolls
-        .filter((b) => b.transitionType)   // transitionType ያለው ብቻ
+        .filter((b) => b.transitionType) // transitionType ያለው ብቻ
         .map((b) => ({
           frame: b.startFrame,
           type: b.transitionType,
-          videoSrc: b.transitionVideoSrc,   // 👈 አዲስ - filmBurn/filmBurn2 መምረጫ
+          videoSrc: b.transitionVideoSrc, // 👈 አዲስ - filmBurn/filmBurn2 መምረጫ
         })),
-    []
+    [],
   );
 
   return (
@@ -41,7 +41,6 @@ export const VideoComposition: React.FC = () => {
           </Sequence>
         ))}
       </GlobalTransition>
-
       <Subtitle items={videoData.subtitles} />
     </AbsoluteFill>
   );

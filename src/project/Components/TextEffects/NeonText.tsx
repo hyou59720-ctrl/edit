@@ -17,7 +17,7 @@ export default function NeonText({
   colors = ["#0ea5e9", "#0284c7", "#ffffff"],
   glowBlur = 10,
   glowIntensity = 1,
-  strokeWidth = 1,
+  strokeWidth = 0, // <--- እዚህ ጋር ከ 1 ወደ 0 ተቀይሯል
   animationSpeed = 3,
 }: TextEffectProps) {
   const [

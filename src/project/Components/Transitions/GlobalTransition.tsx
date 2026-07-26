@@ -4,15 +4,39 @@ import { BlurTransition } from "./BlurTransition";
 import { FlashTransition } from "./FlashTransition";
 import { ZoomTransition } from "./ZoomTransition";
 import { FilmBurnTransition } from "./FilmBurnTransition";
+import { LightLeakTransition } from "./LightLeakTransition";
+import { WhipPanTransition } from "./WhipPanTransition";
+import { MotionBlurTransition } from "./MotionBlurTransition";
+import { ZoomBlurTransition } from "./ZoomBlurTransition";
+import { LumaFadeTransition } from "./LumaFadeTransition";
+import { GlitchTransitionFx } from "./GlitchTransitionFx";
+import { RGBSplitTransition } from "./RGBSplitTransition";
+import { InkSpreadTransition } from "./InkSpreadTransition";
+import { LiquidWarpTransition } from "./LiquidWarpTransition";
+
+export type TransitionType =
+  | "blur"
+  | "flash"
+  | "zoom"
+  | "filmBurn"
+  | "lightLeak"
+  | "whipPan"
+  | "motionBlur"
+  | "zoomBlur"
+  | "lumaFade"
+  | "glitch"
+  | "rgbSplit"
+  | "inkSpread"
+  | "liquidWarp";
 
 export interface GlobalTransitionConfig {
   frame: number;
-  type?: "blur" | "flash" | "zoom" | "filmBurn";
+  type?: TransitionType;
   videoSrc?: "filmBurn" | "filmBurn2";
 }
 
 const EASE = Easing.bezier(0.25, 1, 0.5, 1);
-const DURATION = 16;
+const DURATION = 20;
 const FILM_BURN_DURATION = 50;
 
 function getProgress(frame: number, transitionFrame: number, duration: number): number {
@@ -30,42 +54,85 @@ function getProgress(frame: number, transitionFrame: number, duration: number): 
   return EASE(Math.min(1, Math.max(0, raw)));
 }
 
+const ZERO = {
+  blurP: 0,
+  flashP: 0,
+  zoomP: 0,
+  filmBurnP: 0,
+  filmBurnSrc: "filmBurn" as "filmBurn" | "filmBurn2",
+  lightLeakP: 0,
+  whipPanP: 0,
+  motionBlurP: 0,
+  zoomBlurP: 0,
+  lumaFadeP: 0,
+  glitchP: 0,
+  rgbSplitP: 0,
+  inkSpreadP: 0,
+  liquidWarpP: 0,
+};
+
 export const GlobalTransition: React.FC<{
   children: React.ReactNode;
   transitions: GlobalTransitionConfig[];
 }> = ({ children, transitions }) => {
   const frame = useCurrentFrame();
 
-  const { blurP, flashP, zoomP, filmBurnP, filmBurnSrc } = useMemo(() => {
-    let blurP = 0, flashP = 0, zoomP = 0, filmBurnP = 0;
-    let filmBurnSrc: "filmBurn" | "filmBurn2" = "filmBurn";
+  const p = useMemo(() => {
+    const result = { ...ZERO };
 
     for (const t of transitions) {
       const type = t.type ?? "blur";
       const duration = type === "filmBurn" ? FILM_BURN_DURATION : DURATION;
-      const p = getProgress(frame, t.frame, duration);
+      const progress = getProgress(frame, t.frame, duration);
 
-      if (type === "blur" && p > blurP) blurP = p;
-      else if (type === "flash" && p > flashP) flashP = p;
-      else if (type === "zoom" && p > zoomP) zoomP = p;
-      else if (type === "filmBurn" && p > filmBurnP) {
-        filmBurnP = p;
-        filmBurnSrc = t.videoSrc ?? "filmBurn";
-      }
+      if (type === "blur" && progress > result.blurP) result.blurP = progress;
+      else if (type === "flash" && progress > result.flashP) result.flashP = progress;
+      else if (type === "zoom" && progress > result.zoomP) result.zoomP = progress;
+      else if (type === "filmBurn" && progress > result.filmBurnP) {
+        result.filmBurnP = progress;
+        result.filmBurnSrc = t.videoSrc ?? "filmBurn";
+      } else if (type === "lightLeak" && progress > result.lightLeakP) result.lightLeakP = progress;
+      else if (type === "whipPan" && progress > result.whipPanP) result.whipPanP = progress;
+      else if (type === "motionBlur" && progress > result.motionBlurP) result.motionBlurP = progress;
+      else if (type === "zoomBlur" && progress > result.zoomBlurP) result.zoomBlurP = progress;
+      else if (type === "lumaFade" && progress > result.lumaFadeP) result.lumaFadeP = progress;
+      else if (type === "glitch" && progress > result.glitchP) result.glitchP = progress;
+      else if (type === "rgbSplit" && progress > result.rgbSplitP) result.rgbSplitP = progress;
+      else if (type === "inkSpread" && progress > result.inkSpreadP) result.inkSpreadP = progress;
+      else if (type === "liquidWarp" && progress > result.liquidWarpP) result.liquidWarpP = progress;
     }
 
-    return { blurP, flashP, zoomP, filmBurnP, filmBurnSrc };
+    return result;
   }, [frame, transitions]);
 
+  // 👇 ሁሉም component ዎች ሁልጊዜ mounted ናቸው - tree ፈፅሞ አይቀየርም → reload የለም
   return (
-    <FilmBurnTransition progress={filmBurnP} videoSrc={filmBurnSrc}>
-      <ZoomTransition progress={zoomP}>
-        <BlurTransition progress={blurP}>
-          <FlashTransition progress={flashP}>
-            {children}
-          </FlashTransition>
-        </BlurTransition>
-      </ZoomTransition>
+    <FilmBurnTransition progress={p.filmBurnP} videoSrc={p.filmBurnSrc}>
+      <LightLeakTransition progress={p.lightLeakP}>
+        <WhipPanTransition progress={p.whipPanP}>
+          <MotionBlurTransition progress={p.motionBlurP}>
+            <ZoomBlurTransition progress={p.zoomBlurP}>
+              <LumaFadeTransition progress={p.lumaFadeP}>
+                <GlitchTransitionFx progress={p.glitchP}>
+                  <RGBSplitTransition progress={p.rgbSplitP}>
+                    <InkSpreadTransition progress={p.inkSpreadP}>
+                      <LiquidWarpTransition progress={p.liquidWarpP}>
+                        <ZoomTransition progress={p.zoomP}>
+                          <BlurTransition progress={p.blurP}>
+                            <FlashTransition progress={p.flashP}>
+                              {children}
+                            </FlashTransition>
+                          </BlurTransition>
+                        </ZoomTransition>
+                      </LiquidWarpTransition>
+                    </InkSpreadTransition>
+                  </RGBSplitTransition>
+                </GlitchTransitionFx>
+              </LumaFadeTransition>
+            </ZoomBlurTransition>
+          </MotionBlurTransition>
+        </WhipPanTransition>
+      </LightLeakTransition>
     </FilmBurnTransition>
   );
 };

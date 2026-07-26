@@ -20,7 +20,7 @@ export default function RetroVintageText({
         .retro-vintage-text-effect * {
           color: ${mainColor} !important;
           -webkit-text-fill-color: ${mainColor} !important;
-          -webkit-text-stroke: 1px ${strokeColor};
+          -webkit-text-stroke: 0px ${strokeColor};
           
           /* የሬትሮ ክላሲክ 3D የግራ-ታች ጥላ ስታይል */
           text-shadow:

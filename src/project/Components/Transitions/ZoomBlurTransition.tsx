@@ -2,24 +2,20 @@ import React from "react";
 import { AbsoluteFill } from "remotion";
 import { TransitionProps } from "./types";
 
-export const ZoomTransition: React.FC<TransitionProps> = ({
+export const ZoomBlurTransition: React.FC<TransitionProps> = ({
   children,
   progress = 0,
-  maxScale = 1.3,
-  maxBlur = 28,
+  maxBlur = 35,
 }) => {
-  // progress: 0 (transition የለም) → 1 (transition peak)
-  const scale = 1 + (maxScale - 1) * progress;
-  const blur = maxBlur * progress;
-  const opacity = 1 - progress * 0.1;
+  const scale = 1 + progress * 0.4;
+  const blur = progress * maxBlur;
 
   return (
     <AbsoluteFill
       style={{
         transform: `scale(${scale})`,
         filter: blur > 0.5 ? `blur(${blur}px)` : "none",
-        opacity,
-        willChange: "transform, filter, opacity",
+        willChange: "transform, filter",
       }}
     >
       {children}

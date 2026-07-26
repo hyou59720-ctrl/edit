@@ -5,204 +5,193 @@ import {
   interpolate,
   spring,
   useVideoConfig,
+  Easing,
+  Video,
 } from "remotion";
 
-/**
- * BROLL 3 — FILMING
- * Subtitle covered: "and then a couple weeks filming,"
- * Duration: 53 frames (~1.8s @ 30fps)
- *
- * Concept: a camera viewfinder frame snaps open with corner brackets,
- * a REC dot pulses, and a "2-3 WEEKS" stat racks focus into view —
- * evoking the production/shooting stage of the pipeline.
- */
+// አዲሱን ፋይል ኢምፖርት እናደርጋለን (ፋይሎቹ በተመሳሳይ ቦታ ከሆኑ)
+import { EditingSoftwareUI } from "./assets/EditingSoftwareUI";
+
+import broll from "./assets/broll.mp4";
+
+const VIDEO_SRC = broll;
 
 export const FilmingBroll: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const containerOpacity = interpolate(frame, [0, 8, 44, 53], [0, 1, 1, 0], {
+  // አጠቃላይ ኮንቴይነሩ ሲጀምር እና ሲጨርስ Fade In/Out እንዲያደርግ
+  const containerOpacity = interpolate(frame, [0, 8, 90, 100], [0, 1, 1, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
 
-  // Viewfinder corner brackets snap outward from center
-  const bracketSpread = spring({
+  // 1. መጀመሪያ ቪዲዮው ሲገባ ብድግ የሚለው (Pop-in)
+  const videoCardInitialScale = spring({
     frame,
+    fps,
+    from: 0.85,
+    to: 1,
+    config: { damping: 16, mass: 0.9 },
+  });
+
+  // ጀርባው ላይ ያለው ብዥ ያለ ቪዲዮ ዙም (Zoom)
+  const bgKenBurns = interpolate(frame, [0, 100], [1.35, 1.5], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+
+  const recBlink = Math.floor(frame / 10) % 2 === 0 ? 1 : 0;
+
+  // ==========================================
+  // TRANSITION: ከ Filming ወደ Editing (Frame 38 ላይ ይጀምራል)
+  // ==========================================
+  const transitionP = spring({
+    frame: frame - 38,
     fps,
     from: 0,
     to: 1,
-    durationInFrames: 16,
-    config: { damping: 13, mass: 0.5 },
+    durationInFrames: 22,
+    config: { damping: 14, mass: 0.8 },
   });
 
-  const frameW = 560;
-  const frameH = 360;
-  const bracketLen = 56;
-  const bracketInset = interpolate(bracketSpread, [0, 1], [40, 0]);
+  // 🎯 ማስተካከያ፦ UI በ 0.75 scale ስለሚያንስ፣ ቪዲዮውም አብሮ ወደ 0.66 scale ያንሳል። 
+  // እንዲሁም ትክክለኛው የሞኒተር ማረፊያ ላይ እንዲቀመጥ X እና Y ተስተካክሏል።
+  const videoScale = interpolate(transitionP, [0, 1], [1.5, 0.66]); 
+  const videoTranslateX = interpolate(transitionP, [0, 1], [0, 127]);
+  const videoTranslateY = interpolate(transitionP, [0, 1], [0, -81]);
 
-  // Rack focus blur on the center label
-  const focusBlur = interpolate(frame, [10, 24], [14, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const labelOpacity = interpolate(frame, [10, 22], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  // የ Filming ማዕዘኖች እና የ Editing UI መለዋወጫ (Crossfade)
+  const filmingUIOpacity = interpolate(transitionP, [0, 0.4], [1, 0], { extrapolateRight: "clamp" });
+  const editingUIOpacity = interpolate(transitionP, [0.3, 1], [0, 1], { extrapolateLeft: "clamp" });
 
-  // REC dot pulse
-  const recPulse = 0.6 + 0.4 * Math.sin(frame * 0.5);
-  const recOpacity = interpolate(frame, [6, 14], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
+  // የጽሁፎች መለዋወጫ
+  const textTranslateY = interpolate(transitionP, [0, 1], [0, -40]);
 
-  // Scanning line sweeping down through the frame
-  const scanY = interpolate(frame % 30, [0, 30], [0, frameH], {
+  // ==========================================
+  // EDITING TIMELINE ANIMATIONS
+  // ==========================================
+  const playheadMove = interpolate(frame, [45, 95], [0, 680], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
-  });
-  const scanOpacity = interpolate(frame, [16, 24, 44, 53], [0, 0.5, 0.5, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
+    easing: Easing.bezier(0.25, 0.1, 0.25, 1),
   });
 
-  const Corner = ({
-    top,
-    left,
-    flipX,
-    flipY,
-  }: {
-    top: boolean;
-    left: boolean;
-    flipX: number;
-    flipY: number;
-  }) => (
-    <div
-      className="absolute"
-      style={{
-        top: top ? -bracketInset : "auto",
-        bottom: !top ? -bracketInset : "auto",
-        left: left ? -bracketInset : "auto",
-        right: !left ? -bracketInset : "auto",
-        width: bracketLen,
-        height: bracketLen,
-        transform: `scale(${flipX}, ${flipY})`,
-        transformOrigin: `${left ? "left" : "right"} ${top ? "top" : "bottom"}`,
-      }}
-    >
-      <div
-        className="absolute bg-[#FFD60A]"
-        style={{
-          width: bracketLen,
-          height: 5,
-          top: top ? 0 : "auto",
-          bottom: !top ? 0 : "auto",
-          left: 0,
-          boxShadow: "0 0 12px rgba(255,214,10,0.6)",
-        }}
-      />
-      <div
-        className="absolute bg-[#FFD60A]"
-        style={{
-          width: 5,
-          height: bracketLen,
-          top: top ? 0 : "auto",
-          bottom: !top ? 0 : "auto",
-          left: left ? 0 : "auto",
-          right: !left ? 0 : "auto",
-          boxShadow: "0 0 12px rgba(255,214,10,0.6)",
-        }}
-      />
-    </div>
-  );
+  const clip1Width = spring({ frame: frame - 42, fps, from: 0, to: 280 });
+  const clip2Width = spring({ frame: frame - 46, fps, from: 0, to: 400 });
+  const clip3Width = spring({ frame: frame - 44, fps, from: 0, to: 690 });
 
   return (
-    <AbsoluteFill className="bg-[#08080C] flex items-center justify-center overflow-hidden">
-      <AbsoluteFill
-        className="opacity-[0.06]"
-        style={{
-          backgroundImage:
-            "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
-          backgroundSize: "48px 48px",
-        }}
-      />
-
-      <div
-        className="relative"
-        style={{
-          width: frameW,
-          height: frameH,
-          opacity: containerOpacity,
-        }}
-      >
-        {/* Viewfinder frame outline */}
-        <div className="absolute inset-0 border border-white/10 rounded-sm" />
-
-        {/* corner brackets */}
-        <Corner top left flipX={1} flipY={1} />
-        <Corner top left={false} flipX={-1} flipY={1} />
-        <Corner top={false} left flipX={1} flipY={-1} />
-        <Corner top={false} left={false} flipX={-1} flipY={-1} />
-
-        {/* scanning sweep line */}
-        <div
-          className="absolute left-0 right-0 h-[2px] bg-[#FFD60A]"
+    <AbsoluteFill className="bg-[#08080C]" style={{ opacity: containerOpacity }}>
+      
+      {/* ---- የጀርባ ፍርግርግ እና ብዥ ያለ ቪዲዮ (Blurred Background) ---- */}
+      <AbsoluteFill className="overflow-hidden z-[0]">
+        <Video
+          src={VIDEO_SRC}
+          muted // የጀርባ ቪዲዮ ድምጽ እንዳያስተጋባ ድምጹ ጠፍቷል
+          className="absolute top-1/2 left-1/2 w-full h-full object-cover"
           style={{
-            top: scanY,
-            opacity: scanOpacity,
-            boxShadow: "0 0 16px rgba(255,214,10,0.8)",
+            filter: "blur(40px) brightness(0.3)",
+            transform: `translate(-50%, -50%) scale(${bgKenBurns})`,
           }}
         />
-
-        {/* REC indicator, top-left */}
-        <div
-          className="absolute top-5 left-6 flex items-center gap-2"
-          style={{ opacity: recOpacity }}
-        >
-          <div
-            className="w-3 h-3 rounded-full bg-red-500"
-            style={{
-              opacity: recPulse,
-              boxShadow: `0 0 ${8 * recPulse}px rgba(239,68,68,0.8)`,
-            }}
-          />
-          <span className="text-white font-black text-sm tracking-widest">
-            REC
-          </span>
-        </div>
-
-        {/* frame counter, top-right */}
-        <div
-          className="absolute top-5 right-6 text-[#8A8A96] font-mono text-xs tracking-wider"
-          style={{ opacity: recOpacity }}
-        >
-          00:14:07
-        </div>
-
-        {/* Center stat, racks into focus */}
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center"
+        <AbsoluteFill
           style={{
-            opacity: labelOpacity,
-            filter: `blur(${focusBlur}px)`,
+            background: "linear-gradient(180deg, rgba(8,8,12,0.7) 0%, rgba(8,8,12,0.4) 30%, rgba(8,8,12,0.4) 70%, rgba(8,8,12,0.9) 100%)",
           }}
-        >
-          <span
-            className="font-black text-white leading-none"
-            style={{
-              fontSize: 110,
-              textShadow: "0 0 50px rgba(255,214,10,0.35)",
-            }}
-          >
-            2-3<span className="text-[#FFD60A]">wk</span>
-          </span>
-          <p className="text-[#8A8A96] font-semibold text-base tracking-[0.4em] uppercase mt-3">
-            on set, filming
-          </p>
+        />
+      </AbsoluteFill>
+
+      {/* ======================================================== */}
+      {/* ለብቻው ፋይል ያደረግነው የ EDITING SOFTWARE UI እዚህ ጋር ይጠራል */}
+      {/* ======================================================== */}
+      {/* 🎯 ማስተካከያ፡ Editing UI ወደ 0.75 scale ተደርጓል በጎን በኩል እንዳይቆረጥ */}
+      <div 
+        className="absolute inset-0 pointer-events-none" 
+        style={{ transform: "scale(0.75)", transformOrigin: "center" }}
+      >
+        <EditingSoftwareUI 
+          opacity={editingUIOpacity}
+          videoSrc={VIDEO_SRC}
+          clip1Width={clip1Width}
+          clip2Width={clip2Width}
+          clip3Width={clip3Width}
+          playheadMove={playheadMove}
+        />
+      </div>
+
+      {/* ======================================================== */}
+      {/* ዋናው ቪዲዮ (ከካሜራ ቀረጻ ወደ ሞኒተርነት የሚለወጠው) */}
+      {/* ======================================================== */}
+      <div
+        className="absolute z-[2] rounded-md overflow-hidden shadow-2xl"
+        style={{
+          width: 640,
+          height: 360, 
+          transformOrigin: "center",
+          top: "50%",
+          left: "50%",
+          transform: `translate(-50%, -50%) translate(${videoTranslateX}px, ${videoTranslateY}px) scale(${videoCardInitialScale * videoScale})`,
+        }}
+      >
+        <Video
+          src={VIDEO_SRC}
+          volume={0.6}
+          className="absolute top-0 left-0 w-full h-full object-cover"
+        />
+
+        {/* --- FILMING OVERLAY (ማዕዘኖቹ እና REC ምልክት) - ሽግግሩ ላይ ይጠፋል --- */}
+        <div style={{ opacity: filmingUIOpacity }} className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-6 left-6 w-12 h-12 border-t-[4px] border-l-[4px] border-white opacity-80 shadow-sm" />
+          <div className="absolute top-6 right-6 w-12 h-12 border-t-[4px] border-r-[4px] border-white opacity-80 shadow-sm" />
+          <div className="absolute bottom-6 left-6 w-12 h-12 border-b-[4px] border-l-[4px] border-white opacity-80 shadow-sm" />
+          <div className="absolute bottom-6 right-6 w-12 h-12 border-b-[4px] border-r-[4px] border-white opacity-80 shadow-sm" />
+
+          {/* REC ምልክት */}
+          <div className="absolute top-8 right-8 flex items-center gap-2">
+            <div
+              className="w-3 h-3 rounded-full bg-[#FF3B30] shadow-[0_0_10px_red]"
+              style={{ opacity: recBlink }}
+            />
+            <span className="text-[#FF3B30] font-black text-lg tracking-widest drop-shadow-md">REC</span>
+          </div>
         </div>
       </div>
+
+      {/* ======================================================== */}
+      {/* ጽሑፎች (FILMING -> EDITING) */}
+      {/* ======================================================== */}
+      <div
+        className="absolute bottom-[220px] left-0 right-0 flex flex-col items-center z-[3]"
+        style={{ transform: `translateY(${textTranslateY}px)` }}
+      >
+        {/* Filming Text (ይጠፋል) */}
+        <div className="absolute flex flex-col items-center" style={{ opacity: filmingUIOpacity }}>
+          <span className="text-white/70 font-black text-3xl tracking-[0.4em] uppercase mb-4">
+            Couple Weeks
+          </span>
+          <span
+            className="text-white font-black text-[100px] leading-none tracking-tight"
+            style={{ textShadow: "0 0 40px rgba(255,255,255,0.3)" }}
+          >
+            FILMING
+          </span>
+        </div>
+
+        {/* Editing Text (ይገባል) */}
+        <div className="absolute flex flex-col items-center" style={{ opacity: editingUIOpacity }}>
+          <span className="text-white/70 font-black text-3xl tracking-[0.4em] uppercase mb-4">
+            Three Weeks
+          </span>
+          <span
+            className="text-[#3b769f] font-black text-[100px] leading-none tracking-tight"
+            style={{ textShadow: "0 0 40px rgba(59,118,159,0.5)" }}
+          >
+            EDITING
+          </span>
+        </div>
+      </div>
+      
     </AbsoluteFill>
   );
 };

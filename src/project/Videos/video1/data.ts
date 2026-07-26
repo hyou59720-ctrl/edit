@@ -8,51 +8,211 @@ import { MoneyBroll } from './MoneyBroll';
 export const videoData = {
   title: "MrBeast Dynamic Custom TSX Brolls",
 
-  // 1. ዋናው የ MrBeast A-roll ቪዲዮ ፋይል
   mainVideo: require("./MrBeastRaw.mp4"),
 
-  // 2. የ B-roll ኮዶች (TSX) ከነ ፍሬማቸው — 5 broll
   brolls: [
-  { component: IdeationBroll, startFrame: 115, endFrame: 200 },
-  { component: InfographicBroll, startFrame: 316, endFrame: 382 },
-{
-  component: FilmingBroll,
-  startFrame: 457,
-  endFrame: 556,
-  transitionType: "filmBurn",
-  transitionVideoSrc: "filmBurn",
-},
-  { component: TimelineBroll, startFrame: 556, endFrame: 620 },
-  { component: MoneyBroll, startFrame: 646, endFrame: 700 },
-],
-
-  // 3. እያንዳንዱ ቃል ሳይሳሳት የተዘጋጀው ሙሉ የሰብታይትል ዝርዝር
-  subtitles: [
+    { component: IdeationBroll, startFrame: 115, endFrame: 200 },
+    { component: InfographicBroll, startFrame: 316, endFrame: 382 },
     {
-      text: "We work on videos probably", 
+      component: FilmingBroll,
+      startFrame: 457,
+      endFrame: 556,
+      transitionType: "filmBurn",
+      transitionVideoSrc: "",
+    },
+    { component: TimelineBroll, startFrame: 556, endFrame: 615 },
+    { component: MoneyBroll, startFrame: 615, endFrame: 700 },
+  ],
+
+  subtitles: [
+    // ==========================================
+    // 1. "We work on videos"
+    // ==========================================
+    {
+      text: "We",
       startFrame: 0, 
       endFrame: 49, 
+      animation: "FadeText", 
+      speed: 15, 
+      fontSize: 45, 
+      bottomOffset: 620, 
+      fontFamilyName: "Poppins",
+    },
+    {
+      text: "WORK",
+      startFrame: 8, 
+      endFrame: 49, 
+      animation: "SmoothRevealText", 
+      effect: "ChromeText", 
+      // 👈 ወርቃማ (Gold) ቀለማት ለዋናው ቃል
+      colors: ["#FFDF00", "#FFB300", "#FF8C00"], 
+      speed: 20, 
+      stagger: 2,
+      fontSize: 160, 
+      bottomOffset: 440, 
+      fontFamilyName: "Montserrat",
+    },
+    {
+      text: "on videos",
+      startFrame: 16, 
+      endFrame: 49, 
+      animation: "FadeText", 
+      speed: 15, 
+      fontSize: 45, 
+      bottomOffset: 400, 
+      fontFamilyName: "Poppins",
+    },
+    
+    // ==========================================
+    // 2. "3 to 4 months in advance."
+    // ==========================================
+    {
+      text: "3 TO 4",
+      startFrame: 49, 
+      endFrame: 114, 
       animation: "SmoothRevealText", 
       effect: "ChromeText",
       speed: 20, 
-      stagger: 2, 
-      fontSize: 72,
-      colors: ["#ffffff", "#0e69c6", "#287bfa"]
-      
+      stagger: 2,
+      fontSize: 140, 
+      // 👈 ወርቃማ (Gold) ቀለማት
+      colors: ["#FFDF00", "#FFB300", "#FF8C00"], 
+      bottomOffset: 520, 
+      fontFamilyName: "Montserrat",
     },
-    { text: "three to four months in advance.", startFrame: 49, endFrame: 114, animation: "NeonGlowText", speed: 5, stagger: 1, fontSize: 63, 
+    {
+      text: "MONTHS",
+      startFrame: 57, 
+      endFrame: 114, 
+      animation: "SmoothRevealText", 
+      speed: 20, 
+      fontSize: 65, 
+      bottomOffset: 430, 
+      fontFamilyName: "Montserrat", // ምንም color ስለሌለው ነጭ ይሆናል
     },
-    { text: "But before that, like, there's an ideation", startFrame: 115, endFrame: 180 },
-    { text: "where we brainstorm what they are", startFrame: 181, endFrame: 225 },
-    { text: "for a month or two.", startFrame: 226, endFrame: 255 },
-    { text: "So from start to when they get uploaded,", startFrame: 256, endFrame: 315 },
-    { text: "it's probably like one to two months", startFrame: 316, endFrame: 372 },
-    { text: "coming up with the idea,", startFrame: 373, endFrame: 405 },
-    { text: "three to four months working on the idea,", startFrame: 406, endFrame: 456 },
-    { text: "and then a couple weeks filming,", startFrame: 457, endFrame: 495 },
-    { text: "and then like three weeks editing.", startFrame: 496, endFrame: 555 },
-    { text: "So probably five months from start to finish.", startFrame: 556, endFrame: 612 },
-    { text: "Two years ago we were spending", startFrame: 613, endFrame: 645 },
-    { text: "$100k a video, now we're spending probably...", startFrame: 646, endFrame: 700 },
+    {
+      text: "in advance.",
+      startFrame: 65, 
+      endFrame: 114, 
+      animation: "FadeText", 
+      speed: 15, 
+      fontSize: 40, 
+      bottomOffset: 350, 
+      fontFamilyName: "Poppins",
+    },
+
+    // ==========================================
+    // 3. "For 1 to 2 months"
+    // ==========================================
+    {
+      text: "For",
+      startFrame: 226, 
+      endFrame: 255, 
+      animation: "FadeText", 
+      speed: 15,
+      fontSize: 45, 
+      bottomOffset: 620, 
+      fontFamilyName: "Poppins",
+    },
+    {
+      text: "1 TO 2",
+      startFrame: 232, 
+      endFrame: 255, 
+      animation: "SmoothRevealText", 
+      effect: "ChromeText", 
+      // 👈 ወርቃማ (Gold) ቀለማት
+      colors: ["#FFDF00", "#FFB300", "#FF8C00"], 
+      speed: 20,
+      stagger: 2,
+      fontSize: 150, 
+      bottomOffset: 440, 
+      fontFamilyName: "Montserrat",
+    },
+    {
+      text: "months",
+      startFrame: 238, 
+      endFrame: 255, 
+      animation: "FadeText", 
+      speed: 15,
+      fontSize: 45, 
+      bottomOffset: 400, 
+      fontFamilyName: "Poppins",
+    },
+
+    // ==========================================
+    // 4. "From start to upload"
+    // ==========================================
+    {
+      text: "From start",
+      startFrame: 256, 
+      endFrame: 315, 
+      animation: "FadeText", 
+      speed: 15,
+      fontSize: 50, 
+      bottomOffset: 550,
+      fontFamilyName: "Poppins",
+    },
+    {
+      text: "to",
+      startFrame: 264, 
+      endFrame: 315, 
+      animation: "FadeText", 
+      speed: 15,
+      fontSize: 35, 
+      bottomOffset: 500,
+      fontFamilyName: "Poppins",
+    },
+    {
+      text: "UPLOAD",
+      startFrame: 270, 
+      endFrame: 315, 
+      animation: "SmoothRevealText", 
+      effect: "ChromeText",
+      // 👈 ወርቃማ (Gold) ቀለማት
+      colors: ["#FFDF00", "#FFB300", "#FF8C00"], 
+      speed: 20,
+      stagger: 2,
+      fontSize: 130, 
+      bottomOffset: 350,
+      fontFamilyName: "Montserrat",
+    },
+
+    // ==========================================
+    // 5. "3 to 4 months working on it"
+    // ==========================================
+    {
+      text: "3 to 4 months",
+      startFrame: 406, 
+      endFrame: 456, 
+      animation: "FadeText", 
+      speed: 15,
+      fontSize: 50, 
+      bottomOffset: 620,
+      fontFamilyName: "Poppins",
+    },
+    {
+      text: "WORKING",
+      startFrame: 414, 
+      endFrame: 456, 
+      animation: "SmoothRevealText", 
+      effect: "ChromeText",
+      // 👈 ወርቃማ (Gold) ቀለማት
+      colors: ["#FFDF00", "#FFB300", "#FF8C00"], 
+      speed: 20,
+      stagger: 2,
+      fontSize: 140, 
+      bottomOffset: 460,
+      fontFamilyName: "Montserrat",
+    },
+    {
+      text: "on it",
+      startFrame: 422, 
+      endFrame: 456, 
+      animation: "FadeText", 
+      speed: 15,
+      fontSize: 40, 
+      bottomOffset: 420,
+      fontFamilyName: "Poppins",
+    }
   ],
 };

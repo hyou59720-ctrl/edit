@@ -116,7 +116,6 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1080}
         height={1920}
-        // እዚህ ጋር defaultProps የለም! ምክንያቱም VideoComposition ራሱ ዳታውን ከውስጥ ይስባል
       />
     </>
   );
