@@ -148,7 +148,7 @@ export const ThreeDPhone: React.FC = () => {
       <Sequence
         from={0}
         name="3D Laptop Model"
-        style={{ width: "150%", height: "150%" }}
+        style={{ width: "100%", height: "100%" }}
       >
         <PhoneScene />
       </Sequence>
