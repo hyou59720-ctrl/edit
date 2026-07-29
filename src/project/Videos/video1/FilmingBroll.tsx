@@ -136,7 +136,7 @@ export const FilmingBroll: React.FC = () => {
       >
         <Video
           src={VIDEO_SRC}
-          volume={0.6}
+          muted // 👈 እዚህ ጋር ድምፁ ሙሉ በሙሉ እንዲጠፋ (Muted) ተደርጓል
           className="absolute top-0 left-0 w-full h-full object-cover"
         />
 

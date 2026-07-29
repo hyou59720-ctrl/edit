@@ -27,6 +27,8 @@ export const VideoComposition: React.FC = () => {
           src={videoData.mainVideo}
           style={{ width: "100%", height: "100%", objectFit: "cover" }}
           pauseWhenBuffering
+          // 👈 ዳታው ላይ የጨመርነውን volume እዚህ ጋር ይጠቀማል
+          volume={videoData.mainVideoVolume ?? 1}
         />
 
         {videoData.brolls.map((broll, index) => (
@@ -34,6 +36,7 @@ export const VideoComposition: React.FC = () => {
             key={index}
             from={broll.startFrame}
             durationInFrames={broll.endFrame - broll.startFrame}
+            hidden
           >
             <AbsoluteFill>
               <broll.component />

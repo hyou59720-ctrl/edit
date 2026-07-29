@@ -9,6 +9,8 @@ export const videoData = {
   title: "MrBeast Dynamic Custom TSX Brolls",
 
   mainVideo: require("./MrBeastRaw.mp4"),
+  
+  mainVideoVolume: 1, 
 
   brolls: [
     { component: IdeationBroll, startFrame: 115, endFrame: 200 },

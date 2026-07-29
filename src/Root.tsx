@@ -12,6 +12,7 @@ import { VideoComposition } from './project/Template/VideoComposition';
 
 // አኒሜሽኖቹን ከ sample ፎልደር ውስጥ Import የተደረጉ
 import CircularProgress100 from "./sample/100%";
+import { ThreeDPhone } from "./ThreeDPhone";
 import { AppleCinematicHero } from './sample/graph'; // ቅንፍ {} መጨመርህን እርግጠኛ ሁን
 
 
@@ -107,7 +108,14 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
-
+    <Composition
+          id="ThreeDPhone"
+          component={ThreeDPhone}
+          durationInFrames={400}
+          fps={30}
+          width={1080}
+          height={1920}
+        />      
       {/* 🎯 አዲሱ ሙሉ በሙሉ በባዶ የሚነሳው የMrBeast መቆጣጠሪያ */}
       <Composition
         id="MrBeast-Vericentric-Video"
