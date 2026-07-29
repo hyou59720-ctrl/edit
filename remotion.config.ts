@@ -9,3 +9,6 @@ import { enableTailwind } from '@remotion/tailwind-v4';
 Config.setVideoImageFormat("jpeg");
 Config.setOverwriteOutput(true);
 Config.overrideWebpackConfig(enableTailwind);
+
+// ይህንን አዲሱን መስመር እዚህ ጋር ጨምር
+Config.setChromiumOpenGlRenderer("angle");
