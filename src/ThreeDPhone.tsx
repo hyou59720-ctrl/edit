@@ -5,11 +5,12 @@ import {
   AbsoluteFill,
   interpolate,
   useCurrentFrame,
+  useVideoConfig,
   Sequence,
   staticFile,
   Easing,
 } from "remotion";
-import { Laptop3D } from "./Laptop3D";
+import { IPhone3D } from "./IPhone3D";
 
 const PhoneRig: React.FC = () => {
   const frame = useCurrentFrame();
@@ -49,7 +50,7 @@ const PhoneRig: React.FC = () => {
 
   return (
     <group position={[0, -0.2, 0]}>
-      <Laptop3D
+      <IPhone3D
         screenImage={staticFile("image.png")}
         openAngle={openAngle} 
         rotation={[rotationX, rotationY, rotationZ]}
@@ -89,21 +90,14 @@ const BackgroundAndUI: React.FC = () => {
 };
 
 const PhoneScene: React.FC = () => {
-  const [windowSize, setWindowSize] = React.useState({ width: typeof window !== "undefined" ? window.innerWidth : 1920, height: typeof window !== "undefined" ? window.innerHeight : 1080 });
+  // useVideoConfig() ከ Remotion composition (Root.tsx) ትክክለኛ width/height ይሰጣል
+  // ይህ ሁልጊዜ ወጥ (consistent) ነው - Studio, render, ስልክ, desktop ላይ ተመሳሳይ ውጤት ይሰጣል
+  const { width, height } = useVideoConfig();
 
-  React.useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({ width: window.innerWidth, height: window.innerHeight });
-    };
-
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Responsive camera distance and FOV
-  const isMobile = windowSize.width < 768;
-  const cameraZ = isMobile ? 9 : 8;
-  const fov = isMobile ? 55 : 50;
+  // Responsive camera distance and FOV based on COMPOSITION aspect ratio
+  const isVertical = height > width;
+  const cameraZ = isVertical ? 9 : 8;
+  const fov = isVertical ? 55 : 50;
 
   return (
     <div

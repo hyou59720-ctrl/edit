@@ -181,60 +181,6 @@ const DynamicIsland = () => {
   );
 };
 
-const AppleLogo = () => {
-  const [texture, setTexture] = React.useState<THREE.CanvasTexture | null>(null);
-
-  React.useEffect(() => {
-    let cancelled = false;
-
-    loadFontAwesomeBrands()
-      .then(() => {
-        if (cancelled) return;
-
-        const canvas = document.createElement("canvas");
-        canvas.width = 256;
-        canvas.height = 256;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-
-        ctx.clearRect(0, 0, 256, 256);
-        ctx.fillStyle = "rgba(0,0,0,0.32)";
-        ctx.font = "190px FA6BrandsCustom";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        // Font Awesome 6 Brands "apple" glyph
-        ctx.fillText("\uf179", 128, 140);
-
-        const tex = new THREE.CanvasTexture(canvas);
-        tex.needsUpdate = true;
-        setTexture(tex);
-      })
-      .catch(() => {
-        // Silently skip the logo if the font fails to load (e.g. no network)
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  if (!texture) return null;
-
-  return (
-    <mesh position={[0, 0.2, -0.148]} rotation={[0, Math.PI, 0]}>
-      <planeGeometry args={[0.55, 0.55]} />
-      <meshStandardMaterial
-        map={texture}
-        transparent
-        alphaTest={0.3}
-        roughness={0.6}
-        metalness={0.1}
-        color="#ffffff"
-      />
-    </mesh>
-  );
-};
-
 export interface Android3DProps {
   /** Screen ላይ የሚታየው image/texture URL (Remotion staticFile ወይም ማንኛውም URL) */
   screenImage: string;
