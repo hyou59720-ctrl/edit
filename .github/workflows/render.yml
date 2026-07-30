@@ -27,7 +27,8 @@ jobs:
             libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 \
             libxfixes3 libxrandr2 libgbm1 libasound2t64 \
             libpango-1.0-0 libcairo2 mesa-utils \
-            libgl1-mesa-dri libglx-mesa0 fonts-noto-core
+            libgl1-mesa-dri libglx-mesa0 libegl1 libgles2 \
+            libvulkan1 mesa-vulkan-drivers fonts-noto-core xvfb
 
       - name: Install Project Dependencies
         run: npm install --legacy-peer-deps
@@ -36,7 +37,7 @@ jobs:
         run: npx remotion browser ensure
 
       - name: Render Video
-        run: npx remotion render ThreeDPhone out/video.mp4 --gl=swiftshader --concurrency=1
+        run: xvfb-run -a --server-args="-screen 0 1280x1024x24" npx remotion render ThreeDPhone out/video.mp4 --gl=swangle --concurrency=1
 
       - name: Upload Rendered Video Artifact
         uses: actions/upload-artifact@v4
