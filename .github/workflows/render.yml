@@ -27,11 +27,11 @@ jobs:
       - name: Install Project Dependencies
         run: npm install --legacy-peer-deps
 
-      - name: Install Remotion Browser (Headless Chrome)
+      - name: Install Remotion Browser
         run: npx remotion browser ensure
 
       - name: Render Video
-        run: npx remotion render ThreeDPhone out/video.mp4 --gl=angle
+        run: npx remotion render ThreeDPhone out/video.mp4 --gl=swiftshader
 
       - name: Upload Rendered Video Artifact
         uses: actions/upload-artifact@v4
