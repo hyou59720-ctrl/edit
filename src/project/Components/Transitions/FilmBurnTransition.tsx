@@ -6,8 +6,17 @@ interface FilmBurnTransitionProps extends TransitionProps {
   videoSrc?: "filmBurn" | "filmBurn2";
 }
 
-const burn1 = require("./Video/film burn transition 1.mp4");
-const burn2 = require("./Video/film burn transition 2.mp4");
+const burn1 = require("./Video/filmBurn 1.mp4");
+const burn2 = require("./Video/filmBurn 2.mp4");
+const burn3 = require("./Video/filmBurn 3.mp4");
+const burn4 = require("./Video/filmBurn 4.mp4");
+const burn5 = require("./Video/filmBurn 5.mp4");
+const burn6 = require("./Video/filmBurn 6.mp4");
+const burn7 = require("./Video/filmBurn 7.mp4");
+const burn8 = require("./Video/filmBurn 8.mp4");
+const burn9 = require("./Video/filmBurn 9.mp4");
+const burn10 = require("./Video/filmBurn 10.mp4");
+
 
 export const FilmBurnTransition: React.FC<FilmBurnTransitionProps> = ({
   children,

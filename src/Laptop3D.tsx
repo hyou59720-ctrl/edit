@@ -77,6 +77,11 @@ const LID_THICKNESS = 0.05;
 
 const HINGE_Z = -BASE_DEPTH / 2;
 
+// Lid body፣ Black bezel፣ ScreenTexture እና CameraNotch ሁሉም
+// ይህን ተመሳሳይ radius ይጠቀማሉ - createRoundedRectShape ራሱ
+// ለ notch's ትንሽ size በራሱ clamp ስለሚያደርግ ወጥ (consistent) ውጤት ይሰጣል
+const CORNER_RADIUS = 0.07;
+
 // ============================================================
 // Screen
 // ============================================================
@@ -89,9 +94,18 @@ const ScreenTexture: React.FC<{ screenImage: string }> = ({ screenImage }) => {
     texture.needsUpdate = true;
   }, [texture]);
 
+  const screenWidth = 3.0;
+  const screenHeight = 1.95;
+
+  const geometry = React.useMemo(() => {
+    const shape = createRoundedRectShape(screenWidth, screenHeight, CORNER_RADIUS);
+    const geo = new THREE.ShapeGeometry(shape);
+    remapUV(geo, screenWidth, screenHeight);
+    return geo;
+  }, []);
+
   return (
-    <mesh position={[0, 0, LID_THICKNESS / 2 + 0.002]}>
-      <planeGeometry args={[3.0, 1.95]} />
+    <mesh position={[0, 0, LID_THICKNESS / 2 + 0.002]} geometry={geometry}>
       <meshBasicMaterial map={texture} toneMapped={false} />
     </mesh>
   );
@@ -102,9 +116,16 @@ const ScreenTexture: React.FC<{ screenImage: string }> = ({ screenImage }) => {
 // ============================================================
 
 const CameraNotch = () => {
+  const notchWidth = 0.24;
+  const notchHeight = 0.065;
+
+  const geometry = React.useMemo(() => {
+    const shape = createRoundedRectShape(notchWidth, notchHeight, CORNER_RADIUS);
+    return new THREE.ShapeGeometry(shape);
+  }, []);
+
   return (
-    <mesh position={[0, 0.91, LID_THICKNESS / 2 + 0.004]}>
-      <planeGeometry args={[0.14, 0.045]} />
+    <mesh position={[0, 0.972, LID_THICKNESS / 2 + 0.004]} geometry={geometry}>
       <meshStandardMaterial color="#050505" metalness={0.8} roughness={0.2} />
     </mesh>
   );
@@ -195,7 +216,7 @@ interface LidGroupProps {
 
 const LidGroup: React.FC<LidGroupProps> = ({ screenImage, openAngle }) => {
   const lidGeometry = React.useMemo(() => {
-    const shape = createRoundedRectShape(LID_WIDTH, LID_HEIGHT, 0.10);
+    const shape = createRoundedRectShape(LID_WIDTH, LID_HEIGHT, CORNER_RADIUS);
 
     const geo = new THREE.ExtrudeGeometry(shape, {
       depth: LID_THICKNESS,
@@ -207,8 +228,18 @@ const LidGroup: React.FC<LidGroupProps> = ({ screenImage, openAngle }) => {
     return geo;
   }, []);
 
+  const bezelWidth = LID_WIDTH - 0.02;
+  const bezelHeight = LID_HEIGHT - 0.02;
+
+  const bezelGeometry = React.useMemo(() => {
+    const shape = createRoundedRectShape(bezelWidth, bezelHeight, CORNER_RADIUS);
+    const geo = new THREE.ShapeGeometry(shape);
+    remapUV(geo, bezelWidth, bezelHeight);
+    return geo;
+  }, []);
+
   return (
-    <group position={[0, BASE_THICKNESS, HINGE_Z]} rotation={[openAngle - Math.PI / 2, 0, 0]}>
+    <group position={[0, BASE_THICKNESS, HINGE_Z]} rotation={[Math.PI / 2 - openAngle, 0, 0]}>
       <group position={[0, LID_HEIGHT / 2, 0]}>
         {/* Lid body */}
         <mesh geometry={lidGeometry} position={[0, 0, -LID_THICKNESS / 2]}>
@@ -216,8 +247,7 @@ const LidGroup: React.FC<LidGroupProps> = ({ screenImage, openAngle }) => {
         </mesh>
 
         {/* Black bezel */}
-        <mesh position={[0, 0, LID_THICKNESS / 2 + 0.001]}>
-          <planeGeometry args={[LID_WIDTH - 0.02, LID_HEIGHT - 0.02]} />
+        <mesh position={[0, 0, LID_THICKNESS / 2 + 0.001]} geometry={bezelGeometry}>
           <meshStandardMaterial color="#08090b" metalness={0.5} roughness={0.5} />
         </mesh>
 
@@ -446,7 +476,7 @@ const BaseGroup = () => {
     <group>
       {/* Main body */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} geometry={baseGeometry}>
-        <meshStandardMaterial color="#c9cdd3" metalness={0.5} roughness={0.5} />
+        <meshStandardMaterial color="#c9cdd3" metalness={0.75} roughness={0.28} />
       </mesh>
 
       {/* Keyboard */}

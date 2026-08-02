@@ -36,7 +36,6 @@ export const VideoComposition: React.FC = () => {
             key={index}
             from={broll.startFrame}
             durationInFrames={broll.endFrame - broll.startFrame}
-            hidden
           >
             <AbsoluteFill>
               <broll.component />
