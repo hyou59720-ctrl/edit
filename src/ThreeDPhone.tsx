@@ -11,10 +11,11 @@ import {
   Easing,
 } from "remotion";
 import { Floor, FLOOR_Y } from "./Floor";
+import { CharacterAnimation } from "./Animation";
 
-const SHOW_MESH_NAMES =false;
+const SHOW_MESH_NAMES = false;
 
-const MODEL_SCALE = 0.4;
+const MODEL_SCALE = 2.5;
 const MODEL_POSITION: [number, number, number] = [0, -1.5, 0];
 
 const TARGET_MESH = "";
@@ -34,9 +35,8 @@ const SceneBackgroundCleaner = () => {
   return null;
 };
 
-const AmbulanceCar = ({ onLoadedNames, ...props }: any) => {
-  const { scene } = useGLTF(staticFile("/3D/Airbus.glb"));
-
+// ማስተካከያ፡ useGLTF አውጥተን scene በ prop እንዲቀበል አድርገናል (አንዴ ብቻ እንዲጭን)
+const AmbulanceCar = ({ scene, onLoadedNames, ...props }: any) => {
   useEffect(() => {
     const names: string[] = [];
     const target = TARGET_MESH.toLowerCase();
@@ -79,20 +79,30 @@ const AmbulanceCar = ({ onLoadedNames, ...props }: any) => {
     }
   }, [scene, onLoadedNames]);
 
-  return <primitive object={scene} {...props} />;
+  return (
+    <primitive object={scene} {...props}>
+      {/* animation controller - object ራሱ ውስጥ ተቀምጦ ተመሳሳይ scene/scale/position ይካፈላል */}
+    </primitive>
+  );
 };
 
-// Object አሁን አይንቀሳቀስም - ቋሚ ቦታ ላይ ብቻ ተቀምጦ ይታያል
+// Object ቋሚ ቦታ ላይ ተቀምጦ ይታያል፣ camera ይዞራል፤ character ራሱ ደግሞ Animation.tsx በኩል animate ይደረጋል
 const CarRig: React.FC<{ onLoadedNames: (names: string[]) => void }> = ({
   onLoadedNames,
 }) => {
+  const { scene, animations } = useGLTF(staticFile("/3D/bmw.glb"));
+
   return (
     <group position={MODEL_POSITION}>
       <AmbulanceCar
+        scene={scene}
         onLoadedNames={onLoadedNames}
         rotation={[0, 0, 0]}
         scale={MODEL_SCALE}
       />
+      {animations.length > 0 && (
+        <CharacterAnimation animations={animations} scene={scene} />
+      )}
     </group>
   );
 };
@@ -230,18 +240,22 @@ const CarScene: React.FC = () => {
         camera={{ position: [0, 0, cameraZ], fov: fov }}
         dpr={1}
       >
+        {/* የወለሉ ጫፍ ከ background ጋር እንዲዋሃድ Fog ተጨምሯል */}
+        <fog attach="fog" args={["#0a0a12", 10, 30]} />
+
+        {/* መብራቱ በደንብ እንዲያበራ intensities ጨምረዋል፣ እና የሁለተኛው መብራት y አቅጣጫ ከ -5 ወደ 5 ተስተካክሏል */}
         <ambientLight intensity={1.5} />
         <directionalLight
           position={[5, 8, 5]}
-          intensity={4}
+          intensity={3}
           color="#ffffff"
           castShadow
           shadow-mapSize-width={1024}
           shadow-mapSize-height={1024}
         />
         <directionalLight
-          position={[-5, -5, 5]}
-          intensity={0.5}
+          position={[-5, 5, 5]}
+          intensity={2.5}
           color="#aaddff"
         />
 

@@ -6,15 +6,15 @@ import { Grid } from "@react-three/drei";
 // ==========================================
 // ወለሉ ምን ያክል ቁመት ላይ እንደሆነ - መኪናው ጎማ ወለሉ ላይ በትክክል እንዲያርፍ ከ MODEL_POSITION Y
 // ትንሽ ዝቅ ብሎ መስተካከል አለበት (ጎማ ወደ ወለል እንዳይሰምጥ)
-export const FLOOR_Y = -1.9;
+export const FLOOR_Y = -1.5;
 
 const FLOOR_SIZE = 40;
 
 // reflective ወለል ቀለም
-const FLOOR_COLOR = "#0a0a12";
+const FLOOR_COLOR = "#d6d6d6";
 
 // Grid መስመሮች ቀለም (ግላዊ/ኒዮን ስሜት)
-const GRID_COLOR_MAIN = "#5ee7ff";
+const GRID_COLOR_MAIN = "#000000";
 const GRID_COLOR_SECTION = "#ff2ea6";
 
 interface FloorProps {
@@ -27,13 +27,11 @@ export const Floor: React.FC<FloorProps> = ({
   size = FLOOR_SIZE,
 }) => {
   return (
-<group position={[0, y, 0]}>
-    <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-    <planeGeometry args={[size, size]} />
-    <meshStandardMaterial
-    color={FLOOR_COLOR}
-    />
-  </mesh>
+    <group position={[0, y, 0]}>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[size, size]} />
+        <meshStandardMaterial color={FLOOR_COLOR} />
+      </mesh>
 
       {/* ኒዮን grid effect - synthwave / tron ስሜት ይሰጣል */}
       <Grid
