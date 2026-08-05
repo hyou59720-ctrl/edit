@@ -14,7 +14,7 @@ export const videoData = {
 
   brolls: [
     { component: IdeationBroll, startFrame: 115, endFrame: 200 },
-    { component: InfographicBroll, startFrame: 316, endFrame: 382 },
+    { component: InfographicBroll, startFrame: 316, endFrame: 383 },
     {
       component: FilmingBroll,
       startFrame: 457,
