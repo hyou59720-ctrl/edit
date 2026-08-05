@@ -100,28 +100,28 @@ export const EditingSoftwareUI: React.FC<EditingUIProps> = ({
               {/* Timeline icon */}
               <div className="flex flex-col gap-1">
                 <div className="w-full h-16 bg-[#2a2a2a] rounded-[2px] border-t-2 border-l-2 border-[#ff3333] relative overflow-hidden">
-                   <Video src={videoSrc} className="w-full h-full object-cover opacity-50" />
+                   <Video src={videoSrc} muted className="w-full h-full object-cover opacity-50" />
                 </div>
                 <span className="text-[#b0b0b0] text-[10px] text-center">Timeline 1</span>
               </div>
               {/* Video Clip 3 */}
               <div className="flex flex-col gap-1">
                 <div className="w-full h-16 bg-[#2a2a2a] rounded-[2px] border-t-2 border-[#ff3333] relative overflow-hidden">
-                   <Video src={videoSrc} className="w-full h-full object-cover" />
+                   <Video src={videoSrc} muted className="w-full h-full object-cover" />
                 </div>
                 <span className="text-[#b0b0b0] text-[10px] text-center">3.mp4</span>
               </div>
               {/* Audio/Video Clip 2 */}
               <div className="flex flex-col gap-1">
                 <div className="w-full h-16 bg-[#2a2a2a] rounded-[2px] relative overflow-hidden">
-                   <Video src={videoSrc} className="w-full h-full object-cover filter contrast-125" />
+                   <Video src={videoSrc} muted className="w-full h-full object-cover filter contrast-125" />
                 </div>
                 <span className="text-[#b0b0b0] text-[10px] text-center">2.mp4</span>
               </div>
               {/* Video Clip 1 */}
               <div className="flex flex-col gap-1">
                 <div className="w-full h-16 bg-[#2a2a2a] rounded-[2px] border-b-2 border-[#ff3333] relative overflow-hidden">
-                   <Video src={videoSrc} className="w-full h-full object-cover filter brightness-75" />
+                   <Video src={videoSrc} muted className="w-full h-full object-cover filter brightness-75" />
                 </div>
                 <span className="text-[#b0b0b0] text-[10px] text-center">1.mp4</span>
               </div>
@@ -224,9 +224,9 @@ export const EditingSoftwareUI: React.FC<EditingUIProps> = ({
                      <span className="text-white text-[9px] font-semibold drop-shadow-md">1.mp4</span>
                   </div>
                   <div className="absolute inset-0 flex opacity-40 pointer-events-none mt-4">
-                    <Video src={videoSrc} className="h-full object-cover w-24" />
-                    <Video src={videoSrc} className="h-full object-cover w-24" />
-                    <Video src={videoSrc} className="h-full object-cover w-24" />
+                    <Video src={videoSrc} muted className="h-full object-cover w-24" />
+                    <Video src={videoSrc} muted className="h-full object-cover w-24" />
+                    <Video src={videoSrc} muted className="h-full object-cover w-24" />
                   </div>
                </div>
                
@@ -240,8 +240,8 @@ export const EditingSoftwareUI: React.FC<EditingUIProps> = ({
                      <span className="text-white text-[9px] font-semibold drop-shadow-md">3.mp4</span>
                   </div>
                   <div className="absolute inset-0 flex opacity-40 pointer-events-none mt-4">
-                    <Video src={videoSrc} className="h-full object-cover w-24" style={{ filter: "hue-rotate(180deg)" }} />
-                    <Video src={videoSrc} className="h-full object-cover w-24" style={{ filter: "hue-rotate(180deg)" }} />
+                    <Video src={videoSrc} muted className="h-full object-cover w-24" style={{ filter: "hue-rotate(180deg)" }} />
+                    <Video src={videoSrc} muted className="h-full object-cover w-24" style={{ filter: "hue-rotate(180deg)" }} />
                   </div>
                </div>
             </div>

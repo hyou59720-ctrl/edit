@@ -29,10 +29,24 @@ export type TransitionType =
   | "inkSpread"
   | "liquidWarp";
 
+// 👇 የ Film Burn አይነቶችን በአንድ ላይ ሰብስበን አዲስ Type ፈጠርን
+export type FilmBurnSrcType = 
+  | "filmBurn" 
+  | "filmBurn1" 
+  | "filmBurn2" 
+  | "filmBurn3" 
+  | "filmBurn4" 
+  | "filmBurn5" 
+  | "filmBurn6" 
+  | "filmBurn7" 
+  | "filmBurn8" 
+  | "filmBurn9" 
+  | "filmBurn10";
+
 export interface GlobalTransitionConfig {
   frame: number;
   type?: TransitionType;
-  videoSrc?: "filmBurn" | "filmBurn2";
+  videoSrc?: FilmBurnSrcType; // 👇 እዚህ ላይ አዲሱን Type ተጠቀምን
 }
 
 const EASE = Easing.bezier(0.25, 1, 0.5, 1);
@@ -59,7 +73,7 @@ const ZERO = {
   flashP: 0,
   zoomP: 0,
   filmBurnP: 0,
-  filmBurnSrc: "filmBurn" as "filmBurn" | "filmBurn2",
+  filmBurnSrc: "filmBurn1" as FilmBurnSrcType, // 👇 እዚህ ላይም ማስተካከያ አድርገናል
   lightLeakP: 0,
   whipPanP: 0,
   motionBlurP: 0,
@@ -90,7 +104,7 @@ export const GlobalTransition: React.FC<{
       else if (type === "zoom" && progress > result.zoomP) result.zoomP = progress;
       else if (type === "filmBurn" && progress > result.filmBurnP) {
         result.filmBurnP = progress;
-        result.filmBurnSrc = t.videoSrc ?? "filmBurn";
+        result.filmBurnSrc = t.videoSrc ?? "filmBurn1"; // 👇 ካልተመረጠ default filmBurn1 ይሆናል
       } else if (type === "lightLeak" && progress > result.lightLeakP) result.lightLeakP = progress;
       else if (type === "whipPan" && progress > result.whipPanP) result.whipPanP = progress;
       else if (type === "motionBlur" && progress > result.motionBlurP) result.motionBlurP = progress;

@@ -20,7 +20,7 @@ export const videoData = {
       startFrame: 457,
       endFrame: 556,
       transitionType: "filmBurn",
-      transitionVideoSrc: "",
+      transitionVideoSrc: "filmBurn9",
     },
     { component: TimelineBroll, startFrame: 556, endFrame: 615 },
     { component: MoneyBroll, startFrame: 615, endFrame: 700 },
