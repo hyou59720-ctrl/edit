@@ -27,7 +27,7 @@ const SHOW = {
   TelebirrAdvertisement: false,
   RofiVideo: false,
   MySubtitledVideo: false,
-  ThreeDPhone: false,
+  ThreeDPhone: true,
   MrBeastVericentric: true, 
 };
 

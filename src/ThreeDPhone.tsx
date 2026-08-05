@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, ComponentType } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { ContactShadows, useGLTF } from "@react-three/drei";
 import {
@@ -14,17 +14,14 @@ import { Floor, FLOOR_Y } from "./Floor";
 import { CharacterAnimation } from "./Animation";
 
 const SHOW_MESH_NAMES = false;
-
-const MODEL_SCALE = 2.5;
+const MODEL_SCALE = 1.5;
 const MODEL_POSITION: [number, number, number] = [0, -1.5, 0];
 
-const TARGET_MESH = "";
-const HIDE_MESH = "Plane";
+const MODEL_TYPE = "tsx"; // "glb" ወይም "tsx"
+const MODEL_NAME = "Laptop3D";
 
-// ካሜራው ርቀትና ቁመት
-const CAMERA_RADIUS_HORIZONTAL = 8;
-const CAMERA_RADIUS_VERTICAL = 10;
-// ==========================================
+// ✅ screenImage ለ Android3D
+const SCREEN_IMAGE = staticFile("image.png");
 
 const SceneBackgroundCleaner = () => {
   const { scene } = useThree();
@@ -35,71 +32,78 @@ const SceneBackgroundCleaner = () => {
   return null;
 };
 
-// ማስተካከያ፡ useGLTF አውጥተን scene በ prop እንዲቀበል አድርገናል (አንዴ ብቻ እንዲጭን)
-const AmbulanceCar = ({ scene, onLoadedNames, ...props }: any) => {
+// TSX ብቻ ይጠቀም
+const TSXModel = ({ onLoadedNames }: any) => {
+  const [Component, setComponent] = useState<ComponentType<any> | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    const names: string[] = [];
-    const target = TARGET_MESH.toLowerCase();
-    const hide = HIDE_MESH.toLowerCase();
-
-    scene.traverse((child: any) => {
-      if (child.isMesh) {
-        names.push(child.name);
-        const meshName = child.name.toLowerCase();
-
-        child.castShadow = true;
-        child.receiveShadow = true;
-
-        if (target !== "") {
-          if (!meshName.includes(target)) {
-            child.visible = false;
-            if (child.material) {
-              child.material.transparent = true;
-              child.material.opacity = 0;
-              child.material.depthWrite = false;
-            }
-          } else {
-            child.visible = true;
-          }
-        } else if (hide !== "" && meshName.includes(hide)) {
-          child.visible = false;
-          if (child.material) {
-            child.material.transparent = true;
-            child.material.opacity = 0;
-            child.material.depthWrite = false;
-          }
-        } else {
-          child.visible = true;
-        }
+    const loadTSXModel = async () => {
+      try {
+        const imported = await import(`./models/${MODEL_NAME}`);
+        const Comp = imported.default || imported[MODEL_NAME];
+        setComponent(() => Comp);
+      } catch (error) {
+        console.error(`Failed to load ${MODEL_NAME}.tsx:`, error);
+        setError(`Failed to load ${MODEL_NAME}.tsx`);
       }
-    });
+    };
 
-    if (onLoadedNames) {
-      onLoadedNames(names);
-    }
-  }, [scene, onLoadedNames]);
+    loadTSXModel();
+  }, []);
+
+  if (error) {
+    return (
+      <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="red" />
+      </mesh>
+    );
+  }
+
+  if (!Component) {
+    return (
+      <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="yellow" />
+      </mesh>
+    );
+  }
 
   return (
-    <primitive object={scene} {...props}>
-      {/* animation controller - object ራሱ ውስጥ ተቀምጦ ተመሳሳይ scene/scale/position ይካፈላል */}
-    </primitive>
+    <group position={MODEL_POSITION} scale={MODEL_SCALE}>
+      <Suspense fallback={null}>
+        <Component 
+          onLoadedNames={onLoadedNames}
+          screenImage={SCREEN_IMAGE}
+        />
+      </Suspense>
+    </group>
   );
 };
 
-// Object ቋሚ ቦታ ላይ ተቀምጦ ይታያል፣ camera ይዞራል፤ character ራሱ ደግሞ Animation.tsx በኩል animate ይደረጋል
-const CarRig: React.FC<{ onLoadedNames: (names: string[]) => void }> = ({
-  onLoadedNames,
-}) => {
-  const { scene, animations } = useGLTF(staticFile("/3D/bmw.glb"));
+// GLB ብቻ ይጠቀም - ወደ አላ ፋይል ውስጥ ወሰደ
+const GLBModel = ({ onLoadedNames }: any) => {
+  const { scene, animations } = useGLTF(staticFile(`/3D/${MODEL_NAME}.glb`));
+
+  useEffect(() => {
+    if (!scene) return;
+    const names: string[] = [];
+    scene.traverse((child: any) => {
+      if (child.isMesh) {
+        names.push(child.name);
+        child.castShadow = true;
+        child.receiveShadow = true;
+      }
+    });
+    if (onLoadedNames) onLoadedNames(names);
+  }, [scene, onLoadedNames]);
+
+  if (!scene) return null;
 
   return (
-    <group position={MODEL_POSITION}>
-      <AmbulanceCar
-        scene={scene}
-        onLoadedNames={onLoadedNames}
-        rotation={[0, 0, 0]}
-        scale={MODEL_SCALE}
-      />
+    <group position={MODEL_POSITION} scale={MODEL_SCALE}>
+      <primitive object={scene} />
       {animations.length > 0 && (
         <CharacterAnimation animations={animations} scene={scene} />
       )}
@@ -107,14 +111,23 @@ const CarRig: React.FC<{ onLoadedNames: (names: string[]) => void }> = ({
   );
 };
 
-// ካሜራው መኪናውንና ወለሉን አካቶ በዙሪያቸው የሚዞርበት ክፍል
+const ModelLoader: React.FC<{
+  onLoadedNames: (names: string[]) => void;
+}> = ({ onLoadedNames }) => {
+  return MODEL_TYPE === "tsx" ? (
+    <TSXModel onLoadedNames={onLoadedNames} />
+  ) : (
+    <GLBModel onLoadedNames={onLoadedNames} />
+  );
+};
+
 const CameraOrbit: React.FC = () => {
   const frame = useCurrentFrame();
   const { camera } = useThree();
   const { width, height } = useVideoConfig();
 
   const isVertical = height > width;
-  const radius = isVertical ? CAMERA_RADIUS_VERTICAL : CAMERA_RADIUS_HORIZONTAL;
+  const radius = isVertical ? 10 : 8;
 
   const frames = [
     0, 50, 80, 110, 140, 170, 200, 230, 260, 290, 320, 350, 380, 400,
@@ -168,6 +181,7 @@ const BackgroundAndUI: React.FC = () => {
             fontSize: "clamp(70px, 8vw, 120px)",
             fontWeight: 800,
             letterSpacing: -3,
+            color: "white",
           }}
         >
           3D MODEL
@@ -177,6 +191,7 @@ const BackgroundAndUI: React.FC = () => {
             marginTop: 15,
             fontSize: "clamp(14px, 3vw, 24px)",
             opacity: 0.6,
+            color: "white",
           }}
         >
           DYNAMIC VIEW
@@ -222,7 +237,7 @@ const CarScene: React.FC = () => {
             pointerEvents: "none",
           }}
         >
-          <b style={{ color: "white" }}>በሞዴሉ ውስጥ ያሉ ክፍሎች (Meshes)፡</b>
+          <b style={{ color: "white" }}>በሞዴሉ ውስጥ ያሉ ክፍሎች:</b>
           <br />
           {meshNames.length > 0 ? meshNames.join(" | ") : "እየፈለገ ነው..."}
         </div>
@@ -240,10 +255,8 @@ const CarScene: React.FC = () => {
         camera={{ position: [0, 0, cameraZ], fov: fov }}
         dpr={1}
       >
-        {/* የወለሉ ጫፍ ከ background ጋር እንዲዋሃድ Fog ተጨምሯል */}
         <fog attach="fog" args={["#0a0a12", 10, 30]} />
 
-        {/* መብራቱ በደንብ እንዲያበራ intensities ጨምረዋል፣ እና የሁለተኛው መብራት y አቅጣጫ ከ -5 ወደ 5 ተስተካክሏል */}
         <ambientLight intensity={1.5} />
         <directionalLight
           position={[5, 8, 5]}
@@ -262,7 +275,7 @@ const CarScene: React.FC = () => {
         <SceneBackgroundCleaner />
 
         <Suspense fallback={null}>
-          <CarRig onLoadedNames={setMeshNames} />
+          <ModelLoader onLoadedNames={setMeshNames} />
           <Floor />
         </Suspense>
 
@@ -297,3 +310,5 @@ export const ThreeDPhone: React.FC = () => {
     </AbsoluteFill>
   );
 };
+
+export default ThreeDPhone;
