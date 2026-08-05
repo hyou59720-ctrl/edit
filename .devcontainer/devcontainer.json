@@ -1,0 +1,6 @@
+{
+  "name": "Remotion Codespace",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:20",
+  "postAttachCommand": "npm run dev",
+  "forwardPorts": [3000]
+}
