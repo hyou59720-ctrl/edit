@@ -2,7 +2,7 @@ import React from "react";
 import * as THREE from "three";
 import { Float, RoundedBox, useTexture } from "@react-three/drei";
 
-// Rounded rectangle shape ፈጣሪ function (Dynamic Island እና Screen pill/rounded shape ለመስራት)
+// Rounded rectangle shape ፈጣሪ function
 function createRoundedRectShape(width: number, height: number, radius: number) {
   const shape = new THREE.Shape();
   const w = width / 2;
@@ -22,7 +22,7 @@ function createRoundedRectShape(width: number, height: number, radius: number) {
   return shape;
 }
 
-// Extrude geometry ላይ image texture በትክክል እንዲለጠፍ UV ን በ shape's ልክ ስፋት/ቁመት remap የሚያደርግ function
+// Extrude geometry ላይ image texture በትክክል እንዲለጠፍ UV ን remap የሚያደርግ
 function remapExtrudeUV(
   geometry: THREE.ExtrudeGeometry,
   width: number,
@@ -44,12 +44,17 @@ function remapExtrudeUV(
   return geometry;
 }
 
-// ---- Screen texture: takes the image URL as a prop so it's not tied to Remotion ----
 const ScreenTexture: React.FC<{ screenImage: string }> = ({ screenImage }) => {
   const texture = useTexture(screenImage);
+  
+  React.useEffect(() => {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.needsUpdate = true;
+  }, [texture]);
+
   const screenWidth = 2.08;
   const screenHeight = 4.34;
-  const screenRadius = 0.275;
+  const screenRadius = 0.35;
   const screenDepth = 0.006;
 
   const geometry = React.useMemo(() => {
@@ -64,7 +69,15 @@ const ScreenTexture: React.FC<{ screenImage: string }> = ({ screenImage }) => {
 
   return (
     <mesh position={[0, 0, 0.14]} geometry={geometry}>
-      <meshBasicMaterial map={texture} toneMapped={false} />
+      <meshStandardMaterial 
+        map={texture} 
+        emissiveMap={texture}
+        emissive="#ffffff"
+        emissiveIntensity={0.5}
+        roughness={0.15}
+        metalness={0.5}
+        toneMapped={false} 
+      />
     </mesh>
   );
 };
@@ -72,7 +85,7 @@ const ScreenTexture: React.FC<{ screenImage: string }> = ({ screenImage }) => {
 const ScreenBase = () => {
   const baseWidth = 2.2;
   const baseHeight = 4.45;
-  const baseRadius = 0.275;
+  const baseRadius = 0.4;
   const baseDepth = 0.02;
 
   const geometry = React.useMemo(() => {
@@ -93,32 +106,36 @@ const ScreenBase = () => {
 };
 
 const ScreenBase2 = () => {
-  const baseWidth = 2.2;
-  const baseHeight = 4.45;
-  const baseRadius = 0.275;
-  const baseDepth = 0.02;
+  const baseWidth = 2.25;
+  const baseHeight = 4.49;
+  const baseRadius = 0.4;
+  const baseDepth = 0.23; 
 
   const geometry = React.useMemo(() => {
     const shape = createRoundedRectShape(baseWidth, baseHeight, baseRadius);
     const geo = new THREE.ExtrudeGeometry(shape, {
       depth: baseDepth,
-      bevelEnabled: false,
+      bevelEnabled: true,
+      bevelThickness: 0.015,
+      bevelSize: 0.0015,
+      bevelSegments: 4,
     });
     remapExtrudeUV(geo, baseWidth, baseHeight);
     return geo;
   }, []);
 
   return (
-    <mesh position={[0, 0, -0.146]} geometry={geometry}>
-      <meshStandardMaterial color="#2f3a52" metalness={0.6} roughness={0.5} />
+    <mesh position={[0, 0, -0.13]} geometry={geometry}>
+      {/* 👇 Silver Titanium Frame - እንዳይጠቁር emissive ተጨምሯል */}
+      <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} emissive="#e0e0e0" emissiveIntensity={0.2} />
     </mesh>
   );
 };
 
 const ScreenBase3 = () => {
   const baseWidth = 2;
-  const baseHeight = 2.9;
-  const baseRadius = 0.3;
+  const baseHeight = 3;
+  const baseRadius = 0.4;
   const baseDepth = 0.02;
 
   const geometry = React.useMemo(() => {
@@ -133,7 +150,8 @@ const ScreenBase3 = () => {
 
   return (
     <mesh position={[0, -0.67, -0.147]} geometry={geometry}>
-      <meshStandardMaterial color="#252f45" metalness={0} roughness={1} />
+      {/* Silver Back Glass - made slightly more reflective */}
+      <meshStandardMaterial color="#f0f2f5" metalness={0.2} roughness={0.2} />
     </mesh>
   );
 };
@@ -141,7 +159,7 @@ const ScreenBase3 = () => {
 const ScreenBase4 = () => {
   const baseWidth = 2.1;
   const baseHeight = 1.2;
-  const baseRadius = 0.3;
+  const baseRadius = 0.4;
   const baseDepth = 0.12;
 
   const geometry = React.useMemo(() => {
@@ -155,8 +173,8 @@ const ScreenBase4 = () => {
   }, []);
 
   return (
-    <mesh position={[0, 1.5, -0.2]} geometry={geometry}>
-      <meshStandardMaterial color="#2f3a52" metalness={0.2} roughness={0.5} />
+    <mesh position={[0, 1.55, -0.2]} geometry={geometry}>
+      <meshStandardMaterial color="#e2e4e7" metalness={0.3} roughness={0.6} />
     </mesh>
   );
 };
@@ -164,7 +182,7 @@ const ScreenBase4 = () => {
 const ScreenBase5 = () => {
   const baseWidth = 2;
   const baseHeight = 1.15;
-  const baseRadius = 0.3;
+  const baseRadius = 0.4;
   const baseDepth = 0.12;
 
   const geometry = React.useMemo(() => {
@@ -178,15 +196,15 @@ const ScreenBase5 = () => {
   }, []);
 
   return (
-    <mesh position={[0, 1.5, -0.21]} geometry={geometry}>
-      <meshStandardMaterial color="#2f3a52" metalness={0.5} roughness={0.5} />
+    <mesh position={[0, 1.55, -0.21]} geometry={geometry}>
+      <meshStandardMaterial color="#ffffff" metalness={0.6} roughness={0.2} emissive="#e0e0e0" emissiveIntensity={0.2} />
     </mesh>
   );
 };
 
 const DynamicIsland = () => {
   const shape = React.useMemo(
-    () => createRoundedRectShape(0.55, 0.16, 0.08),
+    () => createRoundedRectShape(0.6, 0.16, 0.08),
     []
   );
 
@@ -199,14 +217,13 @@ const DynamicIsland = () => {
   );
 
   return (
-    <mesh position={[0, 1.98, 0.13]}>
+    <mesh position={[0, 2.06, 0.13]}>
       <extrudeGeometry args={[shape, extrudeSettings]} />
       <meshStandardMaterial color="#000000" metalness={0.1} roughness={0.01} />
     </mesh>
   );
 };
 
-// ---- Charging port (USB-C style slot) - flat/inset decal on the bottom edge, no longer protruding ----
 const ChargingPort = () => {
   const shape = React.useMemo(
     () => createRoundedRectShape(0.34, 0.12, 0.05),
@@ -215,7 +232,7 @@ const ChargingPort = () => {
 
   const extrudeSettings = React.useMemo(
     () => ({
-      depth: 0.006, // very thin so it stays flat / doesn't poke out of the frame
+      depth: 0.006, 
       bevelEnabled: false,
     }),
     []
@@ -232,81 +249,146 @@ const ChargingPort = () => {
   );
 };
 
-// ---- Status bar overlay (signal bars + battery %) drawn on a canvas and placed on top of the screen ----
-const StatusBarOverlay = () => {
-  const texture = React.useMemo(() => {
-    const canvas = document.createElement("canvas");
-    canvas.width = 900;
-    canvas.height = 100;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return null;
+const HomeIndicator = () => {
+  const shape = React.useMemo(
+    () => createRoundedRectShape(0.8, 0.03, 0.015),
+    []
+  );
 
-    ctx.clearRect(0, 0, 900, 100);
-    ctx.fillStyle = "#ffffff";
-    ctx.strokeStyle = "#ffffff";
+  const extrudeSettings = React.useMemo(
+    () => ({
+      depth: 0.005,
+      bevelEnabled: false,
+    }),
+    []
+  );
 
-    // Signal bars (left side)
-    const barBaseX = 30;
-    const barBaseY = 68;
-    const barWidths = 10;
-    const barGap = 6;
-    const barHeights = [18, 28, 38, 48];
-    barHeights.forEach((h, i) => {
-      ctx.fillRect(barBaseX + i * (barWidths + barGap), barBaseY - h, barWidths, h);
-    });
+  return (
+    <mesh position={[0, -2.08, 0.144]}>
+      <extrudeGeometry args={[shape, extrudeSettings]} />
+      <meshBasicMaterial color="#ffffff" opacity={0.7} transparent={true} />
+    </mesh>
+  );
+};
 
-    // Wi-Fi icon (next to signal bars)
-    const wifiX = 160;
-    const wifiY = 55;
-    ctx.lineWidth = 6;
-    for (let r = 14; r <= 34; r += 10) {
-      ctx.beginPath();
-      ctx.arc(wifiX, wifiY, r, Math.PI * 1.2, Math.PI * 1.8);
-      ctx.stroke();
-    }
-    ctx.beginPath();
-    ctx.arc(wifiX, wifiY + 4, 5, 0, Math.PI * 2);
-    ctx.fill();
+// ---- 👇 የተስተካከለ Antenna Bands (2D / Flush with body) 👇 ----
+const AntennaBands = () => {
+  const bandMaterial = <meshStandardMaterial color="#b5b7b9" roughness={0.9} metalness={0.1} />;
+  return (
+    <group>
+      {/* የግራ ጎን መስመሮች (በ X ዘንግ ላይ በጣም ስስ 0.002 ተደርጓል) */}
+      <mesh position={[-1.135, 1.8, 0]}><boxGeometry args={[0.002, 0.04, 0.24]} />{bandMaterial}</mesh>
+      <mesh position={[-1.135, -1.8, 0]}><boxGeometry args={[0.002, 0.04, 0.24]} />{bandMaterial}</mesh>
+      
+      {/* የቀኝ ጎን መስመሮች (በ X ዘንግ ላይ በጣም ስስ 0.002 ተደርጓል) */}
+      <mesh position={[1.135, 1.8, 0]}><boxGeometry args={[0.002, 0.04, 0.24]} />{bandMaterial}</mesh>
+      <mesh position={[1.135, -1.8, 0]}><boxGeometry args={[0.002, 0.04, 0.24]} />{bandMaterial}</mesh>
+      
+      {/* ከላይ እና ከታች ያሉት መስመሮች (በ Y ዘንግ ላይ በጣም ስስ 0.002 ተደርጓል) */}
+      <mesh position={[-0.6, 2.25, 0]}><boxGeometry args={[0.002, 0.002, 0.24]} />{bandMaterial}</mesh>
+      <mesh position={[0.6, 2.25, 0]}><boxGeometry args={[0.002, 0.002, 0.24]} />{bandMaterial}</mesh>
+      <mesh position={[-0.6, -2.25, 0]}><boxGeometry args={[0.04, 0.002, 0.24]} />{bandMaterial}</mesh>
+      <mesh position={[0.6, -2.25, 0]}><boxGeometry args={[0.002, 0.002, 0.24]} />{bandMaterial}</mesh>
+    </group>
+  );
+};
 
-    // Battery percentage text
-    ctx.font = "600 34px Arial";
-    ctx.textAlign = "right";
-    ctx.textBaseline = "middle";
-    ctx.fillText("82%", 790, 50);
-
-    // Battery icon (body + nub)
-    const battX = 810;
-    const battY = 30;
-    const battW = 60;
-    const battH = 40;
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = "#ffffff";
-    ctx.strokeRect(battX, battY, battW, battH);
-    ctx.fillRect(battX + battW + 4, battY + 11, 6, 18); // nub
-    const chargeLevel = 0.82;
-    ctx.fillRect(
-      battX + 4,
-      battY + 4,
-      (battW - 8) * chargeLevel,
-      battH - 8
+let faSolidFontPromise: Promise<FontFace> | null = null;
+function loadFontAwesomeSolid() {
+  if (!faSolidFontPromise) {
+    const font = new FontFace(
+      "FA6SolidCustom",
+      "url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/webfonts/fa-solid-900.ttf)"
     );
+    faSolidFontPromise = font.load().then((loaded) => {
+      document.fonts.add(loaded);
+      return loaded;
+    });
+  }
+  return faSolidFontPromise;
+}
 
-    const tex = new THREE.CanvasTexture(canvas);
-    tex.needsUpdate = true;
-    return tex;
+const StatusBarOverlay = () => {
+  const [texture, setTexture] = React.useState<THREE.CanvasTexture | null>(null);
+
+  React.useEffect(() => {
+    let cancelled = false;
+
+    loadFontAwesomeSolid()
+      .then(() => {
+        if (cancelled) return;
+
+        const canvas = document.createElement("canvas");
+        canvas.width = 1024;
+        canvas.height = 128;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+
+        ctx.clearRect(0, 0, 1024, 128);
+        ctx.fillStyle = "#ffffff";
+        ctx.textBaseline = "middle";
+
+        ctx.font = "36px FA6SolidCustom"; 
+        ctx.textAlign = "left";
+        ctx.fillText("\uf012  \uf1eb", 80, 64);
+        
+        ctx.textAlign = "right";
+        ctx.font = "bold 36px Arial"; 
+        const percentageText = "70%";
+        const percentageTextWidth = ctx.measureText(percentageText).width;
+        
+        ctx.font = "36px Arial"; 
+        const spaceText = " ";
+        const spaceWidth = ctx.measureText(spaceText).width;
+        
+        ctx.font = "36px FA6SolidCustom"; 
+        const batteryFullIcon = "\uf240"; 
+        const batteryFullIconWidth = ctx.measureText(batteryFullIcon).width;
+        
+        const totalRightWidth = percentageTextWidth + spaceWidth + batteryFullIconWidth;
+        const startX_R = 1024 - 80 - totalRightWidth; 
+
+        ctx.textAlign = "left"; 
+
+        ctx.font = "bold 36px Arial"; 
+        ctx.fillText(percentageText, startX_R, 64);
+        
+        ctx.font = "36px Arial"; 
+        ctx.fillText(spaceText, startX_R + percentageTextWidth, 64);
+        
+        ctx.font = "36px FA6SolidCustom"; 
+        ctx.fillText(batteryFullIcon, startX_R + percentageTextWidth + spaceWidth, 64); 
+
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.needsUpdate = true;
+        setTexture(tex);
+      })
+      .catch(() => {});
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (!texture) return null;
 
   return (
-    <mesh position={[0, 1.78, 0.141]}>
-      <planeGeometry args={[1.95, 0.22]} />
-      <meshBasicMaterial map={texture} transparent depthWrite={false} toneMapped={false} />
+    <mesh position={[0, 1.98, 0.15]}>
+      <planeGeometry args={[2.08, 0.26]} />
+      <meshStandardMaterial 
+        map={texture} 
+        emissiveMap={texture} 
+        emissive="#ffffff" 
+        emissiveIntensity={1.5} 
+        transparent={true} 
+        opacity={2} 
+        depthWrite={false} 
+        toneMapped={false} 
+      />
     </mesh>
   );
 };
 
-// ---- Apple logo: loads the real Font Awesome Brands "apple" glyph (\uf179) and draws it to a canvas texture ----
 let faBrandsFontPromise: Promise<FontFace> | null = null;
 function loadFontAwesomeBrands() {
   if (!faBrandsFontPromise) {
@@ -343,16 +425,13 @@ const AppleLogo = () => {
         ctx.font = "190px FA6BrandsCustom";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        // Font Awesome 6 Brands "apple" glyph
         ctx.fillText("\uf179", 128, 140);
 
         const tex = new THREE.CanvasTexture(canvas);
         tex.needsUpdate = true;
         setTexture(tex);
       })
-      .catch(() => {
-        // Silently skip the logo if the font fails to load (e.g. no network)
-      });
+      .catch(() => {});
 
     return () => {
       cancelled = true;
@@ -377,15 +456,11 @@ const AppleLogo = () => {
 };
 
 export interface IPhone3DProps {
-  /** Screen ላይ የሚታየው image/texture URL (Remotion staticFile ወይም ማንኛውም URL) */
   screenImage: string;
-  /** [rotationX, rotationY, rotationZ] በ radians */
   rotation?: [number, number, number];
-  /** የ phone ጠቅላላ scale */
   scale?: number;
 }
 
-// ---- Reusable, self-contained iPhone 3D model. No Remotion dependency. ----
 export const IPhone3D: React.FC<IPhone3DProps> = ({
   screenImage,
   rotation = [0, 0, 0],
@@ -393,13 +468,12 @@ export const IPhone3D: React.FC<IPhone3DProps> = ({
 }) => {
   return (
     <Float speed={0} rotationIntensity={0} floatIntensity={0}>
-      <group scale={scale} rotation={rotation} position={[0, 0, 0]}>
-        {/* Phone body (frame) */}
-        <RoundedBox args={[2.27, 4.5, 0.29]} radius={0.27} smoothness={6}>
-          <meshStandardMaterial color="#2f3a52" metalness={0.6} roughness={0.5} />
-        </RoundedBox>
+      <group scale={scale} rotation={rotation} position={[0, 2.25, 0]}>
+        
+        
+        {/* የጎን አንቴና መስመሮች (Antenna Bands) */}
+        <AntennaBands />
 
-        {/* Screen base - bezel, 2D rounded-rectangle extrude shape */}
         <ScreenBase />
         <ScreenBase2 />
         <ScreenBase3 />     
@@ -410,25 +484,21 @@ export const IPhone3D: React.FC<IPhone3DProps> = ({
           <ScreenTexture screenImage={screenImage} />
         </React.Suspense>
 
-        {/* Status bar overlay - signal bars + wifi + battery % on top of the screen */}
         <StatusBarOverlay />
-
-        {/* Dynamic Island */}
+        <HomeIndicator />
         <DynamicIsland />
-
-        {/* Charging port (bottom edge) */}
         <ChargingPort />
 
         {/* Camera lenses */}
         {[
-          [-0.73, 1.80],
-          [-0.73, 1.23],
-          [-0.20, 1.55],
+          [0.73, 1.85],
+          [0.73, 1.28],
+          [0.20, 1.6],
         ].map(([x, y], i) => (
           <group key={i} position={[x, y, -0.16]} rotation={[Math.PI / 2, 0, 0]}>
             <mesh position={[0, -0.015, 0]}>
               <cylinderGeometry args={[0.27, 0.25, 0.18, 32]} />
-              <meshStandardMaterial color="#2f3a52" metalness={0.5} roughness={0.4} />
+              <meshStandardMaterial color="#ffffff" metalness={0.8} roughness={0.2} emissive="#e0e0e0" emissiveIntensity={0.2} />
             </mesh>
             <mesh>
               <cylinderGeometry args={[0.40, 0.16, 0.30, 32]} />
@@ -448,9 +518,9 @@ export const IPhone3D: React.FC<IPhone3DProps> = ({
         ))}
 
         {/* Flash */}
-        <mesh position={[0.7, 1.85, -0.175]} rotation={[Math.PI / 2, 0, 0]}>
+        <mesh position={[-0.7, 1.85, -0.175]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.25, 0.055, 0.11, 32]} />
-          <meshStandardMaterial color="#f5ede0" metalness={0.2} roughness={0.5} />
+          <meshStandardMaterial color="#ffffff" metalness={0} roughness={0.5} />
         </mesh>
         <mesh position={[0.7, 1.85, -0.175]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.2, 0.035, 0.1, 32]} />
@@ -458,30 +528,29 @@ export const IPhone3D: React.FC<IPhone3DProps> = ({
         </mesh>        
 
         {/* Sensor dot */}
-        <mesh position={[0.7, 1.25, -0.175]} rotation={[Math.PI / 2, 0, 0]}>
+        <mesh position={[-0.7, 1.25, -0.175]} rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[0.25, 0.055, 0.16, 32]} />
           <meshStandardMaterial color="#111111" metalness={0.3} roughness={0.4} />
         </mesh>
 
-        {/* Apple logo - Font Awesome brand glyph */}
         <AppleLogo />
 
-        {/* Power button */}
-        <RoundedBox args={[0.13, 0.5, 0.11]} radius={0.04} smoothness={4} position={[1.1, 0.6, 0]}>
-          <meshStandardMaterial color="#2f3a52" metalness={0.2} roughness={1} />
+        {/* Power button - እንዲያንፀባርቅ ተስተካክሏል */}
+        <RoundedBox args={[0.1, 0.5, 0.11]} radius={0.04} smoothness={4} position={[1.1, 0.6, 0]}>
+          <meshStandardMaterial color="#d8d9db" metalness={0.6} roughness={0.15} />
         </RoundedBox>
 
-        {/* Volume buttons */}
-        <RoundedBox args={[0.13, 0.35, 0.11]} radius={0.04} smoothness={4} position={[-1.1, 0.9, 0]}>
-          <meshStandardMaterial color="#2f3a52" metalness={0.2} roughness={1} />
+        {/* Volume buttons - እንዲያንፀባርቁ ተስተካክለዋል */}
+        <RoundedBox args={[0.1, 0.35, 0.11]} radius={0.04} smoothness={4} position={[-1.1, 0.9, 0]}>
+          <meshStandardMaterial color="#d8d9db" metalness={0.6} roughness={0.15} />
         </RoundedBox>
-        <RoundedBox args={[0.13, 0.35, 0.11]} radius={0.04} smoothness={4} position={[-1.1, 0.45, 0]}>
-          <meshStandardMaterial color="#2f3a52" metalness={0.2} roughness={1} />
+        <RoundedBox args={[0.1, 0.35, 0.11]} radius={0.04} smoothness={4} position={[-1.1, 0.45, 0]}>
+          <meshStandardMaterial color="#d8d9db" metalness={0.6} roughness={0.15} />
         </RoundedBox>
 
-        {/* Mute switch */}
-        <RoundedBox args={[0.13, 0.2, 0.11]} radius={0.03} smoothness={4} position={[-1.1, 1.5, 0]}>
-          <meshStandardMaterial color="#2f3a52" metalness={0.2} roughness={1} />
+        {/* Mute switch - እንዲያንፀባርቅ ተስተካክሏል */}
+        <RoundedBox args={[0.1, 0.2, 0.11]} radius={0.03} smoothness={4} position={[-1.1, 1.5, 0]}>
+          <meshStandardMaterial color="#d8d9db" metalness={0.6} roughness={0.15} />
         </RoundedBox>
       </group>
     </Float>

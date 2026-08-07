@@ -535,7 +535,8 @@ export const Laptop3D: React.FC<Laptop3DProps> = ({
     <Float speed={0} rotationIntensity={0} floatIntensity={0}>
       <group scale={scale} rotation={rotation}>
         {/* Center whole laptop */}
-        <group position={[0, -0.15, 0]}>
+        {/* 👇 ከዚህ በፊት position={[0, -0.15, 0]} ስለነበር የላፕቶፑን ኪቦርድ ከመሬት በታች ቀብሮት ነበር። አሁን [0, 0, 0] ሆኖ ተስተካክሏል */}
+        <group position={[0, 0, 0]}>
           <BaseGroup />
           <Hinge />
           <LidGroup screenImage={screenImage} openAngle={openAngle} />

@@ -9,18 +9,22 @@ import {
   Sequence,
   staticFile,
   Easing,
+  delayRender,
+  continueRender,
 } from "remotion";
 import { Floor, FLOOR_Y } from "./Floor";
 import { CharacterAnimation } from "./Animation";
 
 const SHOW_MESH_NAMES = false;
-const MODEL_SCALE = 1.5;
-const MODEL_POSITION: [number, number, number] = [0, -1.5, 0];
+// 1. ስልኩ በደንብ ጎልቶ እንዲታይ መጠኑን (Scale) አሳድጌዋለሁ
+const MODEL_SCALE = 1.3; 
+// 2. ስልኩ/ላፕቶፑ መሬት (Grid) እና ጥላው ላይ በትክክል እንዲያርፍ ተስተካክሏል
+const MODEL_POSITION: [number, number, number] = [0, FLOOR_Y, 0]; 
 
 const MODEL_TYPE = "tsx"; // "glb" ወይም "tsx"
 const MODEL_NAME = "Laptop3D";
 
-// ✅ screenImage ለ Android3D
+// ✅ screenImage 
 const SCREEN_IMAGE = staticFile("image.png");
 
 const SceneBackgroundCleaner = () => {
@@ -36,6 +40,7 @@ const SceneBackgroundCleaner = () => {
 const TSXModel = ({ onLoadedNames }: any) => {
   const [Component, setComponent] = useState<ComponentType<any> | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [handle] = useState(() => delayRender("ሞዴሉን እያመጣሁ ነው..."));
 
   useEffect(() => {
     const loadTSXModel = async () => {
@@ -43,14 +48,16 @@ const TSXModel = ({ onLoadedNames }: any) => {
         const imported = await import(`./models/${MODEL_NAME}`);
         const Comp = imported.default || imported[MODEL_NAME];
         setComponent(() => Comp);
+        continueRender(handle);
       } catch (error) {
         console.error(`Failed to load ${MODEL_NAME}.tsx:`, error);
         setError(`Failed to load ${MODEL_NAME}.tsx`);
+        continueRender(handle);
       }
     };
 
     loadTSXModel();
-  }, []);
+  }, [handle]);
 
   if (error) {
     return (
@@ -62,12 +69,7 @@ const TSXModel = ({ onLoadedNames }: any) => {
   }
 
   if (!Component) {
-    return (
-      <mesh>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="yellow" />
-      </mesh>
-    );
+    return null;
   }
 
   return (
@@ -137,10 +139,16 @@ const CameraOrbit: React.FC = () => {
     extrapolateRight: "clamp",
   });
 
+  // 👉 3. የካሜራው መመልከቻ (Target) እንደ ሞዴሉ ይለያያል
+  // ላፕቶፕ ሲሆን መሃሉን እንዲያይ (1.0)፣ ስልክ ሲሆን ከፍ ብሎ (2.8) እንዲያይ ተስተካክሏል
+  const isLaptop = MODEL_NAME.includes("Laptop");
+  const targetY = FLOOR_Y + (isLaptop ? 1.0 : 2.8);
+
+  // 👉 4. የካሜራው ቁመት (camHeight) ሁሌም ከመመልከቻው (targetY) ጋር እኩል እንዲሆን
   const camHeight = interpolate(
     frame,
     frames,
-    [1.2, 1.2, 1.2, 1.2, 4, 4, 0.5, 0.5, 0.8, 0.8, 0.8, 0.8, 1.2, 1.2],
+    [targetY, targetY, targetY, targetY, targetY + 1.5, targetY + 1.5, targetY, targetY, targetY, targetY, targetY, targetY, targetY, targetY],
     { easing: Easing.inOut(Easing.ease), extrapolateRight: "clamp" },
   );
 
@@ -151,7 +159,9 @@ const CameraOrbit: React.FC = () => {
     camHeight + wobble,
     Math.cos(angle) * radius,
   );
-  camera.lookAt(0, FLOOR_Y + 0.5, 0);
+  
+  // 👉 5. ካሜራው ቀጥታ ማዕከሉን እንዲመለከት
+  camera.lookAt(0, targetY, 0);
   camera.updateProjectionMatrix();
 
   return null;
@@ -206,8 +216,8 @@ const CarScene: React.FC = () => {
   const [meshNames, setMeshNames] = useState<string[]>([]);
 
   const isVertical = height > width;
-  const cameraZ = isVertical ? 9 : 8;
-  const fov = isVertical ? 55 : 50;
+  const cameraZ = isVertical ? 7.5 : 7; 
+  const fov = isVertical ? 55 : 55;
 
   return (
     <div
@@ -257,7 +267,7 @@ const CarScene: React.FC = () => {
       >
         <fog attach="fog" args={["#0a0a12", 10, 30]} />
 
-        <ambientLight intensity={1.5} />
+        <ambientLight intensity={2.5} />
         <directionalLight
           position={[5, 8, 5]}
           intensity={3}

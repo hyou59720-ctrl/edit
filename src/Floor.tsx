@@ -6,7 +6,7 @@ import { Grid } from "@react-three/drei";
 // ==========================================
 // ወለሉ ምን ያክል ቁመት ላይ እንደሆነ - መኪናው ጎማ ወለሉ ላይ በትክክል እንዲያርፍ ከ MODEL_POSITION Y
 // ትንሽ ዝቅ ብሎ መስተካከል አለበት (ጎማ ወደ ወለል እንዳይሰምጥ)
-export const FLOOR_Y = -2;
+export const FLOOR_Y = -1.8;
 
 const FLOOR_SIZE = 40;
 
