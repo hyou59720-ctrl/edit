@@ -8,10 +8,7 @@ export const MotionBlurTransition: React.FC<TransitionProps> = ({
   direction = "horizontal",
 }: TransitionProps & { direction?: "horizontal" | "vertical" }) => {
   const amount = progress * 30;
-  const filter =
-    direction === "vertical"
-      ? `blur(0px)`
-      : `blur(0px)`;
+  const filter = direction === "vertical" ? `blur(0px)` : `blur(0px)`;
 
   return (
     <AbsoluteFill
@@ -23,6 +20,7 @@ export const MotionBlurTransition: React.FC<TransitionProps> = ({
             : `scaleX(${1 + progress * 0.06})`,
         willChange: "filter, transform",
       }}
+      from={-531}
     >
       {children}
     </AbsoluteFill>

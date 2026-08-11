@@ -2,13 +2,19 @@ import React from "react";
 import { AbsoluteFill } from "remotion";
 import { TransitionProps } from "./types";
 
-export const GlitchTransitionFx: React.FC<TransitionProps> = ({ children, progress = 0 }) => {
+export const GlitchTransitionFx: React.FC<TransitionProps> = ({
+  children,
+  progress = 0,
+}) => {
   const jitter = progress * 12;
   const sliceOffset = Math.sin(progress * Math.PI * 20) * jitter;
 
   return (
     <AbsoluteFill>
-      <AbsoluteFill style={{ transform: `translateX(${sliceOffset}px)` }}>
+      <AbsoluteFill
+        style={{ transform: `translateX(${sliceOffset}px)` }}
+        from={-323}
+      >
         {children}
       </AbsoluteFill>
       {progress > 0.05 && (

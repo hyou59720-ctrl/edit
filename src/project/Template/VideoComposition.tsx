@@ -1,45 +1,71 @@
 import React, { useMemo } from "react";
-import { AbsoluteFill, OffthreadVideo, Sequence } from "remotion";
+import { AbsoluteFill, OffthreadVideo, Sequence, Audio } from "remotion";
 import { Subtitle } from "./Subtitle";
-import {
-  GlobalTransition,
-  GlobalTransitionConfig,
-} from "../Components/Transitions/GlobalTransition";
-import { videoData } from "../Videos/video1/data";
+import { EffectRenderer } from "../Components/Effects/EffectRenderer";
+import { GlobalTransition } from "../Components/Transitions/GlobalTransition";
+import { UiRenderer } from "../Components/UI/UiRenderer"; // UiRendererን ጠራነው
 
-export const VideoComposition: React.FC = () => {
-  const transitions: GlobalTransitionConfig[] = useMemo(
+export const VideoComposition = ({ videoData }: any) => {
+  const transitions = useMemo(
     () =>
       videoData.brolls
-        .filter((b) => b.transitionType) // transitionType ያለው ብቻ
-        .map((b) => ({
+        .filter((b: any) => b.transitionType)
+        .map((b: any) => ({
           frame: b.startFrame,
           type: b.transitionType,
-          videoSrc: b.transitionVideoSrc, // 👈 አዲስ - filmBurn/filmBurn2 መምረጫ
+          videoSrc: b.transitionVideoSrc,
         })),
-    [],
+    [videoData],
   );
 
   return (
-    <AbsoluteFill style={{ backgroundColor: "black" }}>
+    <AbsoluteFill style={{ backgroundColor: "black" }} from={-26}>
+      {videoData.audio && (
+        <Sequence from={0}>
+          <Audio src={videoData.audio} volume={1} />
+        </Sequence>
+      )}
       <GlobalTransition transitions={transitions}>
-        <OffthreadVideo
-          src={videoData.mainVideo}
-          style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          pauseWhenBuffering
-          // 👈 ዳታው ላይ የጨመርነውን volume እዚህ ጋር ይጠቀማል
-          volume={videoData.mainVideoVolume ?? 1}
-        />
+        {/* እዚህ ጋር videoData.showVideo !== false መሆኑ ተስተካክሏል */}
+        {videoData.mainVideo && videoData.showVideo !== false && (
+          <OffthreadVideo
+            src={videoData.mainVideo}
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+            }}
+            volume={videoData.mainVideoVolume ?? 1}
+          />
+        )}
 
-        {videoData.brolls.map((broll, index) => (
+        {videoData.brolls.map((broll: any, index: number) => (
           <Sequence
             key={index}
             from={broll.startFrame}
             durationInFrames={broll.endFrame - broll.startFrame}
           >
-            <AbsoluteFill>
-              <broll.component />
-            </AbsoluteFill>
+            <EffectRenderer
+              effect={broll.effect}
+              fullScreen={true}
+              color={broll.color}
+              intensity={broll.intensity}
+              maxBlur={broll.maxBlur}
+            >
+              {broll.uiType ? (
+                <AbsoluteFill
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    ...broll.style,
+                  }}
+                >
+                  <UiRenderer type={broll.uiType} {...broll.uiProps} />
+                </AbsoluteFill>
+              ) : broll.component ? (
+                <broll.component />
+              ) : null}
+            </EffectRenderer>
           </Sequence>
         ))}
       </GlobalTransition>

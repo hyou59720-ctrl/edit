@@ -51,7 +51,7 @@ export const Subtitle: React.FC<SubtitleProps> = ({ items }) => {
           stagger: currentSubtitle.stagger ?? 2,
           startFrame: currentSubtitle.startFrame,
           endFrame: currentSubtitle.endFrame,
-          fontSize: currentSubtitle.fontSize ?? 72, 
+          fontSize: currentSubtitle.fontSize ?? 46, 
         };
 
         const textContent = currentSubtitle.animation ? (

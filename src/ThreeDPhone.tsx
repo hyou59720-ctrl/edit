@@ -22,7 +22,7 @@ const MODEL_SCALE = 1.3;
 const MODEL_POSITION: [number, number, number] = [0, FLOOR_Y, 0]; 
 
 const MODEL_TYPE = "tsx"; // "glb" ወይም "tsx"
-const MODEL_NAME = "IPhone3D";
+const MODEL_NAME = "sample";
 
 // ✅ screenImage 
 const SCREEN_IMAGE = staticFile("image.png");
