@@ -6,45 +6,43 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@react-three/drei": "^10.7.8",
-    "@react-three/fiber": "^9.7.0",
-    "@remotion/cli": "4.0.507",
-    "@remotion/effects": "4.0.507",
-    "@remotion/fonts": "4.0.507",
-    "@remotion/google-fonts": "4.0.507",
-    "@remotion/lottie": "4.0.507",
-    "@remotion/media": "4.0.507",
-    "@remotion/motion-blur": "4.0.507",
-    "@remotion/paths": "4.0.507",
-    "@remotion/rough-notation": "4.0.507",
-    "@remotion/tailwind-v4": "4.0.507",
-    "@remotion/three": "4.0.507",
-    "@remotion/zod-types": "4.0.507",
-    "html-to-image": "^1.11.13",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@remotion/cli": "4.0.494",
+    "@remotion/effects": "4.0.494",
+    "@remotion/fonts": "4.0.494",
+    "@remotion/google-fonts": "4.0.494",
+    "@remotion/lottie": "4.0.494",
+    "@remotion/media": "4.0.494",
+    "@remotion/motion-blur": "4.0.494",
+    "@remotion/paths": "4.0.494",
+    "@remotion/rough-notation": "^4.0.494",
+    "@remotion/tailwind-v4": "4.0.494",
+    "@remotion/three": "^4.0.494",
+    "@remotion/zod-types": "4.0.494",
     "lucide-react": "^1.24.0",
     "motion": "^12.42.2",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "remotion": "4.0.507",
+    "remotion": "4.0.494",
     "tailwindcss": "4.0.0",
     "three": "^0.185.1",
-    "zod": "4.4.3"
+    "zod": "4.3.6"
   },
   "devDependencies": {
-    "@remotion/eslint-config-flat": "4.0.507",
+    "@remotion/eslint-config-flat": "4.0.494",
     "@types/react": "19.2.7",
     "@types/web": "0.0.166",
     "eslint": "9.19.0",
     "prettier": "3.8.1",
     "typescript": "5.9.3"
   },
-"scripts": {
-  "dev": "remotion studio",
-  "build": "remotion render ThreeDPhone out/video.mp4",
-  "render:rofi-test": "remotion render Rofi out/rofi-test.mp4 --frames=500-650",
-  "upgrade": "remotion upgrade",
-  "lint": "eslint src && tsc"
-}
+  "scripts": {
+    "dev": "remotion studio",
+    "build": "remotion render Rofi out/video.mp4",
+    "upgrade": "remotion upgrade",
+    "lint": "eslint src && tsc"
+  },
   "sideEffects": [
     "*.css"
   ]

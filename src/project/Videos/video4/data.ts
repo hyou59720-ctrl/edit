@@ -15,11 +15,11 @@ export const videoData = {
     { component: OnlineWorkBroll, startFrame: 150, endFrame: 262 },
     { component: EditingTimelineBroll, startFrame: 300, endFrame: 350 },
     { component: SocialMediaScrollBroll, startFrame: 525, endFrame: 646 },
-    { component: GlobalClientsBroll, startFrame: 970, endFrame: 1130 },
+    { component: GlobalClientsBroll, startFrame: 1030, endFrame: 1130 },
     { component: PracticalEditingBroll, startFrame: 1250, endFrame: 1390 },
     { component: TelegramScreenRecordBroll, startFrame: 1590, endFrame: 1765 },
     { component: PdfCoverAnimationBroll, startFrame: 1790, endFrame: 1846 },
-    { component: TypingCommentBroll, startFrame: 1890, endFrame: 1933 }
+    { component: TypingCommentBroll, startFrame: 1890, endFrame: 1950 }
   ],
   subtitles: [
     { text: "በወር ተጨማሪ 20 ሺህ ብር እንኳን", startFrame: 0, endFrame: 35 },
