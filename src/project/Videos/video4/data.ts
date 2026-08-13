@@ -20,9 +20,88 @@ export const videoData = {
     { component: TelegramScreenRecordBroll, startFrame: 1590, endFrame: 1765 },
     { component: PdfCoverAnimationBroll, startFrame: 1790, endFrame: 1846 },
     { component: TypingCommentBroll, startFrame: 1890, endFrame: 1950 },
-    { startFrame:10, endFrame:35, uiType: "moneyHook",
-    uiProps: { scale:2 }
+    {
+      startFrame: 5,
+      endFrame: 40,
+      uiType: "moneyHook",
+      offsetY: 400,
+      offsetX: 0, 
+      uiProps: {
+        scale: 1.5,
+        color: "#3d77fe", 
+        durationInFrames: 40 - 5, 
+      },
     },
+    {
+      startFrame: 55,
+      endFrame: 112,
+      uiType: "circleTimer",
+      offsetY: 400,
+      offsetX: 0,
+      uiProps: {
+        seconds: 30,      
+        countDirection: "down",
+        size: 400,
+        strokeWidth: 40,
+        color: "#3d77fe",
+        durationInFrames: 112 - 55,
+      },
+    },
+    {
+      startFrame: 450,
+      endFrame: 495,
+      uiType: "numberPop",
+      offsetY: 400,
+      offsetX: 0,
+      uiProps: {
+        items: ["10", "20", "50"],
+        suffix: "?",
+        color: "#3d77fe",
+        staggerFrames: 8,
+        durationInFrames: 495 - 450},
+    },
+    {
+      startFrame: 660,
+      endFrame: 745,
+      uiType: "growthTrend",
+      offsetY: 400,
+      uiProps: { text: "High Demand", size:2, color: "#3d77fe", durationInFrames: 745 - 660 },
+    },
+    {
+      startFrame: 797,
+      endFrame: 850,
+      uiType: "iconReveal",
+      offsetY: 400,
+      uiProps: {
+        text: "Rofi Edits",
+        imageSrc: "Rofi.png",
+        color: "#3d77fe",
+        size: 1.7,
+        durationInFrames: 850 - 797,
+      },
+    },    
+    {
+      startFrame: 1200,
+      endFrame: 1250,
+      uiType: "checkBadge",
+      offsetY: -300,
+      offsetX: -320,
+      uiProps: { text: "Practical", color: "#22D3EE", durationInFrames: 1250 - 1200 },
+    }, 
+    {
+      startFrame: 1475,
+      endFrame: 1525,
+      uiType: "onlineBadge",
+      offsetY: 400,
+      uiProps: { text: "100% Online", size:1.5, color: "#3B82F6", durationInFrames: 1525 - 1475 },
+    },
+    {
+      startFrame: 1846,
+      endFrame: 1890,
+      uiType: "freeBadge",
+      offsetY: 400,
+      uiProps: { text: "FREE", size:1.5, color: "#F43F5E", durationInFrames: 1890 - 1846 },
+    }    
   ],
   subtitles: [
     { text: "በወር ተጨማሪ 20 ሺህ ብር እንኳን", startFrame: 0, endFrame: 35 },
@@ -71,6 +150,6 @@ export const videoData = {
     { text: "እንዴት client እንደምታገኙ የሚያሳይ PDF", startFrame: 1790, endFrame: 1846 },
     { text: "በነጻ እንድለቅላችሁ የምትፈልጉ ከሆነ", startFrame: 1846, endFrame: 1890 },
     { text: "comment ላይ Video Editing ብላችሁ ጻፉልኝ፣", startFrame: 1890, endFrame: 1933 },
-    { text: "ብዛታችሁን አይቼ የምለቅላችሁ ይሆናል", startFrame: 1933, endFrame: 1980 }
+    { text: "ብዛታችሁን አይቼ የምለቅላችሁ ይሆናል", startFrame: 1933, endFrame: 1990 }
   ],
 };

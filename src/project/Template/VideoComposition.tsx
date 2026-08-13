@@ -55,8 +55,10 @@ export const VideoComposition = ({ videoData }: any) => {
               {broll.uiType ? (
                 <AbsoluteFill
                   style={{
+                    display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
+                    transform: `translate(${broll.offsetX ?? 0}px, ${broll.offsetY ?? 0}px)`,
                     ...broll.style,
                   }}
                 >

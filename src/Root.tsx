@@ -96,7 +96,7 @@ export const RemotionRoot: React.FC = () => {
         component={() =>
           <VideoComposition videoData={rofiData}/>
         }
-        durationInFrames={1980}
+        durationInFrames={1990}
         fps={25}
         width={1080}
         height={1920}

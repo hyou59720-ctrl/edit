@@ -1,9 +1,11 @@
-// src/project/Components/UI/index.ts
-
-// የድሮዎቹ...
 export { GlassCard } from "./Cards/GlassCard";
 export { BalanceCard } from "./Cards/BalanceCard";
 export { PaymentCard } from "./Cards/PaymentCard";
-
-// 🌟 አዳዲሶቹ (ከ Popups ፎልደር)
 export { MoneyHook } from "./Popups/MoneyHook";
+export { CircleTimer } from "./Popups/CircleTimer";
+export { NumberPop } from "./Popups/NumberPop";
+export { GrowthTrend } from "./Popups/GrowthTrend";
+export { CheckBadge } from "./Popups/CheckBadge";
+export { OnlineBadge } from "./Popups/OnlineBadge";
+export { FreeBadge } from "./Popups/FreeBadge";
+export { IconReveal } from "./Popups/IconReveal";
