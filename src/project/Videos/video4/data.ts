@@ -19,7 +19,8 @@ export const videoData = {
     { component: PracticalEditingBroll, startFrame: 1250, endFrame: 1390 },
     { component: TelegramScreenRecordBroll, startFrame: 1590, endFrame: 1765 },
     { component: PdfCoverAnimationBroll, startFrame: 1790, endFrame: 1846 },
-    { component: TypingCommentBroll, startFrame: 1890, endFrame: 1950 }
+    { component: TypingCommentBroll, startFrame: 1890, endFrame: 1950 },
+    { startFrame:10, endFrame:35, uiType: "moneyHook" },
   ],
   subtitles: [
     { text: "በወር ተጨማሪ 20 ሺህ ብር እንኳን", startFrame: 0, endFrame: 35 },

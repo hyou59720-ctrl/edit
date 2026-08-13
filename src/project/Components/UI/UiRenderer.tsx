@@ -1,7 +1,11 @@
 import React from "react";
-import { GlassCard, BalanceCard, PaymentCard } from "./index";
-import { UiRendererProps } from "./types"; // ታይፖቹን ከ types.ts ጠራን
-
+import {
+  GlassCard,
+  BalanceCard,
+  PaymentCard,
+  MoneyHook,
+} from "./index";
+import { UiRendererProps } from "./types";
 
 export const UiRenderer = ({
   type,
@@ -17,52 +21,56 @@ export const UiRenderer = ({
   width,
   height,
   borderRadius,
+  text,
 }: UiRendererProps) => {
   switch (type) {
     case "glassCard":
       return (
-        <GlassCard 
-          title={title} 
-          subtitle={subtitle} 
-          width={width} 
-          height={height} 
-          borderRadius={borderRadius} 
+        <GlassCard
+          title={title}
+          subtitle={subtitle}
+          width={width}
+          height={height}
+          borderRadius={borderRadius}
         />
       );
 
     case "balanceCard":
       return (
-        <BalanceCard 
-          balance={balance} 
-          accountNumber={accountNumber} 
-          accountHolder={accountHolder} 
-          width={width} 
-          height={height} 
-          borderRadius={borderRadius} 
+        <BalanceCard
+          balance={balance}
+          accountNumber={accountNumber}
+          accountHolder={accountHolder}
+          width={width}
+          height={height}
+          borderRadius={borderRadius}
         />
       );
 
+    case "moneyHook":
+      return <MoneyHook text={text} />;
+
     case "paymentCard":
       return (
-        <PaymentCard 
+        <PaymentCard
           amount={amount}
           recipient={recipient}
           date={date}
           status={status}
-          width={width} 
-          height={height} 
-          borderRadius={borderRadius} 
+          width={width}
+          height={height}
+          borderRadius={borderRadius}
         />
       );
 
     default:
       return (
-        <GlassCard 
-          title={title} 
-          subtitle={subtitle} 
-          width={width} 
-          height={height} 
-          borderRadius={borderRadius} 
+        <GlassCard
+          title={title}
+          subtitle={subtitle}
+          width={width}
+          height={height}
+          borderRadius={borderRadius}
         />
       );
   }
