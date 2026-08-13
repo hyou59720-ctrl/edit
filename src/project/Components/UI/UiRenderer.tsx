@@ -21,6 +21,7 @@ export const UiRenderer = ({
   width,
   height,
   borderRadius,
+  scale,
   text,
 }: UiRendererProps) => {
   switch (type) {
@@ -48,7 +49,16 @@ export const UiRenderer = ({
       );
 
     case "moneyHook":
-      return <MoneyHook text={text} />;
+      return (
+        <MoneyHook 
+          text={text} 
+          width={width} 
+          height={height} 
+          borderRadius={borderRadius} 
+          scale={scale} 
+        />
+      );
+
 
     case "paymentCard":
       return (
