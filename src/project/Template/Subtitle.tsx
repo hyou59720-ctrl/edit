@@ -3,6 +3,8 @@ import { AbsoluteFill, useCurrentFrame } from "remotion";
 import type { TextAnimationProps } from "../Components/TextAnimations/types";
 import { TextAnimationRenderer } from "./TextAnimationRenderer";
 import { TextEffectRenderer } from "../Components/TextEffects/TextEffectRenderer";
+// 🌟 አዲሱን FontRenderer ጠራነው (መንገዱን እንዳለህበት ፎልደር አስተካክለው)
+import { FontRenderer } from "../Components/TextFonts/FontRendere";
 
 interface SubtitleItem {
   text: string;
@@ -37,13 +39,6 @@ export const Subtitle: React.FC<SubtitleProps> = ({ items }) => {
   return (
     <AbsoluteFill>
       {activeSubtitles.map((currentSubtitle, index) => {
-        // 1. ዳታው ላይ ፎንት ካለ እሱን ይጠቀማል፣ ካሌለ ነባሪ (sans-serif) ይሆናል
-        const appliedFont = currentSubtitle.fontFamilyName ?? "sans-serif";
-        
-        // 2. ፎንቱን ከ Google Fonts ላይ በቀጥታ የሚስብበት ሊንክ (ስፔስ ካለው ወደ + ይቀይረዋል)
-        const googleFontUrl = currentSubtitle.fontFamilyName 
-          ? `https://fonts.googleapis.com/css2?family=${currentSubtitle.fontFamilyName.replace(/ /g, '+')}:wght@400;700;900&display=swap`
-          : null;
 
         const props: TextAnimationProps = {
           text: currentSubtitle.text,
@@ -85,28 +80,33 @@ export const Subtitle: React.FC<SubtitleProps> = ({ items }) => {
         );
 
         return (
-          <div key={index}>
-            {/* 3. 👈 ይሄ ኮድ ዳታው ላይ የጻፍከውን ማናቸውንም Google Font በራሱ ፈልጎ ይጭነዋል */}
-            {googleFontUrl && <link rel="stylesheet" href={googleFontUrl} />}
-            
-            <div
-              style={{
-                position: "absolute",
-                bottom: currentSubtitle.bottomOffset ?? 150, 
-                left: 0,
-                right: 0,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: "100%",
-                // 4. 👈 እዚህ ጋር ፎንቱን ለጽሑፉ እንሰጠዋለን
-                fontFamily: `"${appliedFont}", sans-serif`, 
-                fontWeight: 900, // የ MrBeast ስታይል ወፍራም ፎንት
-                textTransform: "uppercase", // ሁልጊዜ ትላልቅ ፊደላት
-              }}
-            >
-              {finalContent}
-            </div>
+          <div
+            key={index}
+            style={{
+              position: "absolute",
+              bottom: currentSubtitle.bottomOffset ?? 150, 
+              left: 0,
+              right: 0,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: "100%",
+            }}
+          >
+            {/* 🌟 እዚህ ጋር Google Fontም ይሁን Local Font፣ FontRenderer ራሱ ለይቶ ያመጣዋል */}
+            <FontRenderer fontName={currentSubtitle.fontFamilyName}>
+              <div
+                style={{
+                  fontWeight: 900, 
+                  textTransform: "uppercase", 
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {finalContent}
+              </div>
+            </FontRenderer>
           </div>
         );
       })}
